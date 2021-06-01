@@ -110,14 +110,16 @@ public class City implements ICity {
 
     @Override
     public IMeasurement[] getMeasurementsBySensor(String s) {
-        for (int i = 0; i < stations.length; i++) {
-            ISensor[] tempSensors = stations[i].getSensors();
-            for (int j = 0; j < tempSensors.length; j++) {
-                if (stations[i] != null && tempSensors[j] != null && tempSensors[j].getId().equals(s)) {
-                    return tempSensors[j].getMeasurements();
+        for (Station station : stations) {
+            if (station != null) {
+                for (ISensor tempSensor : station.getSensors()) {
+                    if (tempSensor != null && tempSensor.getId().equals(s)) {
+                        return tempSensor.getMeasurements();
+                    }
                 }
             }
         }
+
         return null;
     }
 }
