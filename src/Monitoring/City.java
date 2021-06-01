@@ -52,10 +52,19 @@ public class City implements ICity {
         return null;
     }
 
+    // TODO: Array grow()
+
     @Override
-    public boolean addStation(String s) throws CityException {
-        //TODO: Array problem
-        return false;
+    public boolean addStation(String stationName) throws CityException {
+        if (stationName == null) throw new CityException("Station Name can't be NULL");
+
+        // Check if Station already exists by it's name
+        if (findStationByName(stationName) != null) {
+            return false;
+        }
+
+        stations[elements++] = new Station(stationName);
+        return true;
     }
 
     @Override
