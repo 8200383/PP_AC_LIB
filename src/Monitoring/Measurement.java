@@ -1,7 +1,6 @@
-package Monitoring.SensorFactory;
+package Monitoring;
 
 import Monitoring.SensorFactory.Enums.ParametersUnits;
-import Monitoring.SensorFactory.ValueObjects.MeasurementValue;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.Unit;
 import edu.ma02.core.exceptions.MeasurementException;
@@ -21,19 +20,29 @@ import java.time.LocalDateTime;
  */
 public class Measurement implements IMeasurement {
 
-    MeasurementValue value;
-    LocalDateTime localDateTime;
-    Unit unit;
+    private final double value;
+    private final LocalDateTime localDateTime;
+    private final Unit unit;
 
-    public Measurement(double val, LocalDateTime dateTime, String unitMeasurement, Parameter sensorParameter) throws MeasurementException, SensorException {
+    public Measurement(double val, LocalDateTime dateTime,
+                       String unitMeasurement, Parameter sensorParameter
+    ) throws MeasurementException, SensorException {
 
-        value = new MeasurementValue(val);
+        if (!validateValueBounds(val)) {
+            throw new MeasurementException("Measurement Value Out of Bounds");
+        }
+
+        value = val;
         localDateTime = dateTime;
         unit = Unit.getUnitFromString(unitMeasurement);
 
         if (!validateUnitMeasure(sensorParameter, unit)) {
             throw new SensorException("Invalid Unit Measure for this Sensor!");
         }
+    }
+
+    public boolean validateValueBounds(double val) {
+        return val != -99;
     }
 
     private boolean validateUnitMeasure(Parameter parameter, Unit unit) {
@@ -47,18 +56,17 @@ public class Measurement implements IMeasurement {
 
     @Override
     public double getValue() {
-        return value.getValue();
+        return value;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
+        if (obj == this) return true;
 
         if (obj instanceof Measurement m) {
             return m.localDateTime == this.localDateTime && m.value == this.value;
         }
+
         return false;
     }
 
@@ -66,7 +74,7 @@ public class Measurement implements IMeasurement {
     public String toString() {
         return "Measurement{" +
                 "localDateTime=" + localDateTime.toString() +
-                ", value=" + value.getValue() + Unit.getUnitString(unit) +
+                ", value=" + value + Unit.getUnitString(unit) +
                 "}";
     }
 }
