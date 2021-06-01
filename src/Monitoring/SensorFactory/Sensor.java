@@ -1,8 +1,6 @@
 package Monitoring.SensorFactory;
 
-import Monitoring.Coordinates.ValueObjects.CartesianCoordinate;
-import Monitoring.Coordinates.ValueObjects.GeographicCoordinate;
-import Monitoring.SensorFactory.ValueObjects.SensorId;
+import Monitoring.Measurement;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.exceptions.MeasurementException;
@@ -28,9 +26,9 @@ public abstract class Sensor implements ISensor {
 
     private int sensorCapacity = 10;
 
-    private final SensorId sensorId;
-    private final CartesianCoordinate cartesianCoordinate;
-    private final GeographicCoordinate geographicCoordinate;
+    private final String sensorId;
+    private final ICartesianCoordinates cartesianCoordinates;
+    private final IGeographicCoordinates geographicCoordinates;
 
     private Measurement[] measurements;
     private int numMeasurements;
@@ -44,25 +42,35 @@ public abstract class Sensor implements ISensor {
      * <p>
      * Exemplos de códigos validos: QA0NO20001, METEMP0078, ME00PA0078
      */
-    protected Sensor(String id,
-                     double x, double y, double z,
-                     double lat, double lng
+    protected Sensor(String sensorId,
+                     ICartesianCoordinates cartesianCoordinates,
+                     IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
-        sensorId = new SensorId(id);
-        cartesianCoordinate = new CartesianCoordinate(x, y, z);
-        geographicCoordinate = new GeographicCoordinate(lat, lng);
+
+        if (validateSensorId(sensorId)) throw new SensorException("Invalid Sensor ID Length");
+
+        this.sensorId = sensorId;
+        this.cartesianCoordinates = cartesianCoordinates;
+        this.geographicCoordinates = geographicCoordinates;
         measurements = new Measurement[sensorCapacity];
     }
 
     public static Sensor SensorFactory(
             String sensorId,
-            double x, double y, double z,
-            double lat, double lng
+            ICartesianCoordinates cartesianCoordinates,
+            IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
-        if (sensorId.contains("QA")) return new AirSensor(sensorId, x, y, z, lat, lng);
-        else if (sensorId.contains("RU")) return new NoiseSensor(sensorId, x, y, z, lat, lng);
-        else if (sensorId.contains("ME")) return new WeatherSensor(sensorId, x, y, z, lat, lng);
-        else throw new SensorException("Invalid Sensor Type!");
+        if (sensorId.contains("QA")) {
+            return new AirSensor(sensorId, cartesianCoordinates, geographicCoordinates);
+        } else if (sensorId.contains("RU")) {
+            return new NoiseSensor(sensorId, cartesianCoordinates, geographicCoordinates);
+        } else if (sensorId.contains("ME")) {
+            return new WeatherSensor(sensorId, cartesianCoordinates, geographicCoordinates);
+        } else throw new SensorException("Invalid Sensor Type!");
+    }
+
+    public static boolean validateSensorId(String sensorId) {
+        return sensorId.length() == 10;
     }
 
     protected abstract Parameter identifySensorParameter(String sensorId);
@@ -95,7 +103,7 @@ public abstract class Sensor implements ISensor {
 
     @Override
     public String getId() {
-        return sensorId.toString();
+        return sensorId;
     }
 
     @Override
@@ -106,12 +114,12 @@ public abstract class Sensor implements ISensor {
 
     @Override
     public ICartesianCoordinates getCartesianCoordinates() {
-        return cartesianCoordinate;
+        return cartesianCoordinates;
     }
 
     @Override
     public IGeographicCoordinates getGeographicCoordinates() {
-        return geographicCoordinate;
+        return geographicCoordinates;
     }
 
     @Override
@@ -131,8 +139,8 @@ public abstract class Sensor implements ISensor {
     public String toString() {
         return "Sensor{\n" +
                 " sensorId=" + sensorId +
-                ",\n cartesianCoordinate=" + cartesianCoordinate +
-                ",\n geographicCoordinate=" + geographicCoordinate +
+                ",\n cartesianCoordinate=" + cartesianCoordinates.toString() +
+                ",\n geographicCoordinate=" + geographicCoordinates.toString() +
                 ",\n measurements=" + Arrays.toString(measurements) +
                 ",\n numMeasurements=" + numMeasurements +
                 "\n}";

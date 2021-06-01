@@ -1,10 +1,13 @@
 package Monitoring.SensorFactory;
 
+import Monitoring.Measurement;
 import Monitoring.SensorFactory.Exceptions.UnrecognizedSensorParameter;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
+import edu.ma02.core.interfaces.ICartesianCoordinates;
+import edu.ma02.core.interfaces.IGeographicCoordinates;
 
 import java.time.LocalDateTime;
 
@@ -22,10 +25,10 @@ class AirSensor extends Sensor {
     private final Parameter parameter;
 
     protected AirSensor(String sensorId,
-                        double x, double y, double z,
-                        double lat, double lng
+                        ICartesianCoordinates cartesianCoordinates,
+                        IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
-        super(sensorId, x, y, z, lat, lng);
+        super(sensorId, cartesianCoordinates, geographicCoordinates);
 
         if ((parameter = identifySensorParameter(sensorId)) == null) {
             throw new UnrecognizedSensorParameter();
