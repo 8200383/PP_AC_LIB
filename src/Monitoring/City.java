@@ -20,9 +20,16 @@ import java.time.LocalDateTime;
  */
 
 public class City implements ICity {
-    private String cityId;
-    private String cityName;
+    private final String cityId;
+    private final String cityName;
     private Station[] stations;
+    private int elements = 0;
+
+    public City(String id, String name) {
+        cityId = id;
+        cityName = name;
+        stations = new Station[10];
+    }
 
     @Override
     public String getId() {
