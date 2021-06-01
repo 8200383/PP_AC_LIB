@@ -35,13 +35,17 @@ public class Station implements IStation {
     }
 
     @Override
-    public boolean addMeasurement(String s, double v, LocalDateTime localDateTime, String s1) throws StationException, SensorException, MeasurementException {
-        for (int i = 0; i < sensors.length; i++) {
-            if (sensors[i] != null && sensors[i].getId().equals(s)) {
-                sensors[i].addMeasurement(v, localDateTime, s1);
-                return true;
+    public boolean addMeasurement(String sensorId, double value, LocalDateTime date, String unit) throws StationException, SensorException, MeasurementException {
+        if (sensorId == null || date == null || unit == null) {
+            throw new StationException("Parameters can't be NULL");
+        }
+
+        for (Sensor sensor : sensors) {
+            if (sensor != null && sensor.getId().equals(sensorId)) {
+                return sensor.addMeasurement(value, date, unit);
             }
         }
+
         return false;
     }
 
