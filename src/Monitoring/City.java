@@ -34,6 +34,24 @@ public class City implements ICity {
         return cityName;
     }
 
+    private Station findStationByName(String stationName) {
+        if (stationName == null) return null;
+
+        for (Station station : stations) {
+            if (stationName.equals(station.getName())) return station;
+        }
+
+        return null;
+    }
+
+    private ISensor findSensorAtStationById(Station station, String sensorId) {
+        for (ISensor sensor : station.getSensors()) {
+            if (sensorId.equals(sensor.getId())) return sensor;
+        }
+
+        return null;
+    }
+
     @Override
     public boolean addStation(String s) throws CityException {
         //TODO: Array problem
@@ -51,7 +69,8 @@ public class City implements ICity {
         if (stationName == null) {
             throw new CityException();
         }
-        IStation station = getStationByName(stationName);
+
+        IStation station = findStationByName(stationName);
         if (station == null) {
             throw new CityException();
         }
@@ -69,23 +88,14 @@ public class City implements ICity {
         return stations;
     }
 
-    private IStation getStationByName(String s) {
-        for (int i = 0; i < stations.length; i++) {
-            if (stations[i] != null && stations[i].getName().equals(s)) {
-                return stations[i];
-            }
-        }
-        return null;
-    }
-
     @Override
-    public IStation getStation(String s) {
-        return getStationByName(s);
+    public IStation getStation(String stationName) {
+        return findStationByName(stationName);
     }
 
     @Override
     public ISensor[] getSensorsByStation(String stationName) {
-        IStation station = getStationByName(stationName);
+        IStation station = findStationByName(stationName);
         return (station != null) ? station.getSensors() : null;
     }
 
