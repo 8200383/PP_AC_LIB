@@ -40,6 +40,7 @@ class AirSensor extends Sensor {
             if (sensorId.contains(param.toString())) return param;
         }
 
+        //TODO: Perguntar ao stor
         /* Special treatment for PM2_5*/
         return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
     }
