@@ -18,15 +18,24 @@ import java.time.LocalDateTime;
  * Número: 8200590
  * Turma: LEI1T3
  */
-
 public class Station implements IStation {
-    private String name;
+    // Stations only exists when framed within a city
+
+    private final String name;
     private Sensor[] sensors;
+    private int elements = 0;
+
+    protected Station(String name) {
+        this.name = name;
+        sensors = new Sensor[10];
+    }
 
     @Override
     public String getName() {
         return name;
     }
+
+    // TODO: Array grow()
 
     @Override
     public boolean addSensor(ISensor sensor) throws StationException, SensorException {
@@ -68,11 +77,12 @@ public class Station implements IStation {
 
     @Override
     public ISensor getSensor(String s) {
-        for (int i = 0; i < sensors.length; i++) {
-            if (sensors[i] != null && sensors[i].getId().equals(s)) {
-                return sensors[i];
+        for (Sensor sensor : sensors) {
+            if (sensor != null && sensor.getId().equals(s)) {
+                return sensor;
             }
         }
+
         return null;
     }
 }
