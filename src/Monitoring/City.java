@@ -96,7 +96,9 @@ public class City implements ICity {
     }
 
     @Override
-    public boolean addMeasurement(String stationName, String sensorId, double value, String unit, LocalDateTime localDateTime) throws CityException, StationException, SensorException, MeasurementException {
+    public boolean addMeasurement(String stationName, String sensorId, double value,
+                                  String unit, LocalDateTime localDateTime
+    ) throws CityException, StationException, SensorException, MeasurementException {
         if (stationName == null) {
             throw new CityException();
         }
@@ -106,9 +108,9 @@ public class City implements ICity {
             throw new CityException();
         }
 
-        for (ISensor sensor : station.getSensors()){
-            for (IMeasurement measurement : sensor.getMeasurements()){
-                //TODO: oooooooooooooof
+        for (ISensor sensor : station.getSensors()) {
+            for (IMeasurement measurement : sensor.getMeasurements()) {
+                // TODO Visit Docs
             }
         }
         return station.addMeasurement(sensorId, value, localDateTime, unit);
