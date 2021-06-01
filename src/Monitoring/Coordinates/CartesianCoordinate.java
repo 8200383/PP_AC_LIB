@@ -1,4 +1,4 @@
-package Monitoring.Coordinates.ValueObjects;
+package Monitoring.Coordinates;
 
 import edu.ma02.core.interfaces.ICartesianCoordinates;
 

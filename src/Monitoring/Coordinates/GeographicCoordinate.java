@@ -1,4 +1,4 @@
-package Monitoring.Coordinates.ValueObjects;
+package Monitoring.Coordinates;
 
 import Monitoring.Coordinates.Exceptions.LatitudeCoordinateException;
 import Monitoring.Coordinates.Exceptions.LongitudeCoordinateException;
