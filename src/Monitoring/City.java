@@ -31,16 +31,6 @@ public class City implements ICity {
         stations = new Station[10];
     }
 
-    @Override
-    public String getId() {
-        return cityId;
-    }
-
-    @Override
-    public String getName() {
-        return cityName;
-    }
-
     private Station findStationByName(String stationName) {
         if (stationName == null) return null;
 
@@ -59,7 +49,21 @@ public class City implements ICity {
         return null;
     }
 
-    // TODO: Array grow()
+    private void grow() {
+        Station[] copy = new Station[stations.length * 2];
+        System.arraycopy(stations, 0, copy, 0, stations.length);
+        stations = copy;
+    }
+
+    @Override
+    public String getId() {
+        return cityId;
+    }
+
+    @Override
+    public String getName() {
+        return cityName;
+    }
 
     @Override
     public boolean addStation(String stationName) throws CityException {
@@ -68,6 +72,11 @@ public class City implements ICity {
         // Check if Station already exists by it's name
         if (findStationByName(stationName) != null) {
             return false;
+        }
+
+        // If array is full then grow array
+        if (elements == stations.length) {
+            grow();
         }
 
         stations[elements++] = new Station(stationName);

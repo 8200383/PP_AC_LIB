@@ -24,8 +24,6 @@ import java.util.Arrays;
  */
 public abstract class Sensor implements ISensor {
 
-    private int sensorCapacity = 10;
-
     private final String sensorId;
     private final ICartesianCoordinates cartesianCoordinates;
     private final IGeographicCoordinates geographicCoordinates;
@@ -52,7 +50,7 @@ public abstract class Sensor implements ISensor {
         this.sensorId = sensorId;
         this.cartesianCoordinates = cartesianCoordinates;
         this.geographicCoordinates = geographicCoordinates;
-        measurements = new Measurement[sensorCapacity];
+        measurements = new Measurement[10];
     }
 
     public static Sensor SensorFactory(
@@ -84,8 +82,7 @@ public abstract class Sensor implements ISensor {
     }
 
     private void grow() {
-        sensorCapacity *= 2;
-        Measurement[] copy = new Measurement[sensorCapacity];
+        Measurement[] copy = new Measurement[measurements.length * 2];
         System.arraycopy(measurements, 0, copy, 0, measurements.length);
         measurements = copy;
     }
@@ -93,7 +90,8 @@ public abstract class Sensor implements ISensor {
     protected boolean addElement(Measurement measurement) {
         if (exists(measurement)) return false;
 
-        if (numMeasurements == sensorCapacity) {
+        // If array is full then grow array
+        if (numMeasurements == measurements.length) {
             grow();
         }
 

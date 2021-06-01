@@ -30,15 +30,24 @@ public class Station implements IStation {
         sensors = new Sensor[10];
     }
 
+    private void grow() {
+        Sensor[] copy = new Sensor[sensors.length * 2];
+        System.arraycopy(sensors, 0, copy, 0, sensors.length);
+        sensors = copy;
+    }
+
     @Override
     public String getName() {
         return name;
     }
 
-    // TODO: Array grow()
-
     @Override
     public boolean addSensor(ISensor sensor) throws StationException, SensorException {
+        // If array is full then grow array
+        if (elements == sensors.length) {
+            grow();
+        }
+
         if (sensor == null) {
             throw new StationException("Sensor Interface can't NULL");
         }
