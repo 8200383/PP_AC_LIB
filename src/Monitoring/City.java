@@ -68,9 +68,31 @@ public class City implements ICity {
     }
 
     @Override
-    public boolean addSensor(String stationName, String sensorId, ICartesianCoordinates iCartesianCoordinates, IGeographicCoordinates iGeographicCoordinates) throws CityException, StationException, SensorException {
-        //TODO: Adapt sensor constructor
-        return false;
+    public boolean addSensor(String stationName, String sensorId,
+                             ICartesianCoordinates cartesianCoordinates,
+                             IGeographicCoordinates geographicCoordinates
+    ) throws CityException, StationException, SensorException {
+        if (stationName == null) {
+            throw new CityException("Station Name can't be NULL");
+        }
+
+        Station station = findStationByName(stationName);
+        if (station == null) {
+            throw new CityException("Station not found");
+        }
+
+        // If caught from City returns a StationException otherwise return a SensorException
+        if (Sensor.validateSensorId(sensorId)) {
+            throw new StationException("Invalid Sensor ID");
+        }
+
+        ISensor sensor = findSensorAtStationById(station, sensorId);
+        if (sensor != null) {
+            throw new StationException("Sensor doesn't exist");
+        }
+
+        // Create Sensor Object
+        return station.addSensor(Sensor.SensorFactory(sensorId, cartesianCoordinates, geographicCoordinates));
     }
 
     @Override
