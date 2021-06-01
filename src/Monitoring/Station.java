@@ -29,8 +29,20 @@ public class Station implements IStation {
     }
 
     @Override
-    public boolean addSensor(ISensor iSensor) throws StationException, SensorException {
-        //TODO: Array
+    public boolean addSensor(ISensor sensor) throws StationException, SensorException {
+        if (sensor == null) {
+            throw new StationException("Sensor Interface can't NULL");
+        }
+
+        if (sensor instanceof Sensor s) {
+            if (!Sensor.validateSensorId(s.getId())) {
+                throw new SensorException("Sensor Id can't have less or more than 10 characters");
+            }
+
+            sensors[elements++] = s;
+            return true;
+        }
+
         return false;
     }
 
