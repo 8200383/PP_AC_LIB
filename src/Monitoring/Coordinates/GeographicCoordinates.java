@@ -1,8 +1,11 @@
 package Monitoring.Coordinates;
 
-import Monitoring.Coordinates.Exceptions.LatitudeCoordinateException;
-import Monitoring.Coordinates.Exceptions.LongitudeCoordinateException;
+import Monitoring.Coordinates.Exceptions.LatitudeCoordinatesException;
+import Monitoring.Coordinates.Exceptions.LongitudeCoordinatesException;
 import edu.ma02.core.interfaces.IGeographicCoordinates;
+
+import static Monitoring.Coordinates.GeographicBounds.MAX_LONGITUDE;
+import static Monitoring.Coordinates.GeographicBounds.MIN_LONGITUDE;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -13,15 +16,7 @@ import edu.ma02.core.interfaces.IGeographicCoordinates;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class GeographicCoordinate implements IGeographicCoordinates {
-
-    /**
-     * Geographic Bounds
-     */
-    public static final double MIN_LATITUDE = -90.0;
-    public static final double MAX_LATITUDE = 90.0;
-    public static final double MIN_LONGITUDE = -180.0;
-    public static final double MAX_LONGITUDE = 180.0;
+public class GeographicCoordinates implements IGeographicCoordinates {
 
     /**
      * Geographic Coordinates
@@ -37,14 +32,14 @@ public class GeographicCoordinate implements IGeographicCoordinates {
      * @apiNote The numbers are in decimal degrees format.
      * @link https://docs.mapbox.com/help/glossary/lat-lon/
      */
-    public GeographicCoordinate(double lat, double lng) throws LatitudeCoordinateException, LongitudeCoordinateException {
+    public GeographicCoordinates(double lat, double lng) throws LatitudeCoordinatesException, LongitudeCoordinatesException {
 
         if (lat < MIN_LONGITUDE || lat > MAX_LONGITUDE) {
-            throw new LatitudeCoordinateException("Latitude Out of Bounds");
+            throw new LatitudeCoordinatesException("Latitude Out of Bounds");
         }
 
         if (lng < MIN_LONGITUDE || lng > MAX_LONGITUDE) {
-            throw new LongitudeCoordinateException("Longitude Out of Bounds");
+            throw new LongitudeCoordinatesException("Longitude Out of Bounds");
         }
 
         latitude = lat;

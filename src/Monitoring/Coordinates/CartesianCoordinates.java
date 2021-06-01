@@ -11,12 +11,12 @@ import edu.ma02.core.interfaces.ICartesianCoordinates;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class CartesianCoordinate implements ICartesianCoordinates {
+public class CartesianCoordinates implements ICartesianCoordinates {
     private final double xAxis;
     private final double yAxis;
     private final double zAxis;
 
-    public CartesianCoordinate(double x, double y, double z) {
+    public CartesianCoordinates(double x, double y, double z) {
         xAxis = x;
         yAxis = y;
         zAxis = z;
