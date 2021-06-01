@@ -51,6 +51,18 @@ public class Measurement implements IMeasurement {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj instanceof Measurement m) {
+            return m.localDateTime == this.localDateTime && m.value == this.value;
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "Measurement{" +
                 "localDateTime=" + localDateTime.toString() +
