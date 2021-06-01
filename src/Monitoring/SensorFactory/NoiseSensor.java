@@ -1,10 +1,12 @@
-package Monitoring.Sensors;
+package Monitoring.SensorFactory;
 
-import Monitoring.Sensors.Exceptions.UnrecognizedSensorParameter;
+import Monitoring.SensorFactory.Exceptions.UnrecognizedSensorParameter;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
-import edu.ma02.core.enumerations.Unit;
+import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
+
+import java.time.LocalDateTime;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -17,25 +19,23 @@ import edu.ma02.core.exceptions.SensorException;
  */
 class NoiseSensor extends Sensor {
 
-    private Parameter parameter;
-    private Unit defaultUnit;
+    private final Parameter parameter;
 
     protected NoiseSensor(String sensorId,
                           double x, double y, double z,
                           double lat, double lng
     ) throws SensorException {
         super(sensorId, x, y, z, lat, lng);
-        identifySensorParameter(sensorId);
+
+        if ((parameter = identifySensorParameter(sensorId)) == null) {
+            throw new UnrecognizedSensorParameter();
+        }
     }
 
     @Override
-    protected void identifySensorParameter(String sensorId) throws UnrecognizedSensorParameter {
-
+    protected Parameter identifySensorParameter(String sensorId) {
         /* Single Exceptional Case for Noise Sensors*/
-        if (!sensorId.contains("LAEQ")) throw new UnrecognizedSensorParameter();
-
-        parameter = Parameter.LAEQ;
-        defaultUnit = Unit.DB;
+        return sensorId.contains("LAEQ") ? Parameter.LAEQ : null;
     }
 
     @Override
@@ -47,4 +47,10 @@ class NoiseSensor extends Sensor {
     public Parameter getParameter() {
         return parameter;
     }
+
+    @Override
+    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException {
+        return super.addElement(new Measurement(value, localDateTime, unit, parameter));
+    }
+
 }

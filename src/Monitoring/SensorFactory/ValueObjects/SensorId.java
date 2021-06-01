@@ -1,4 +1,4 @@
-package Monitoring.Sensors.ValueObjects;
+package Monitoring.SensorFactory.ValueObjects;
 
 import edu.ma02.core.exceptions.SensorException;
 

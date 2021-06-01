@@ -1,9 +1,8 @@
-package Monitoring.Sensors;
+package Monitoring.SensorFactory;
 
 import Monitoring.Coordinates.ValueObjects.CartesianCoordinate;
 import Monitoring.Coordinates.ValueObjects.GeographicCoordinate;
-import Monitoring.Measurement;
-import Monitoring.Sensors.ValueObjects.SensorId;
+import Monitoring.SensorFactory.ValueObjects.SensorId;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.exceptions.MeasurementException;
@@ -27,10 +26,12 @@ import java.util.Arrays;
  */
 public abstract class Sensor implements ISensor {
 
-    protected SensorId sensorId;
+    private int SENSOR_DEFAULT_CAPACITY = 10;
 
+    private final SensorId sensorId;
     private final CartesianCoordinate cartesianCoordinate;
     private final GeographicCoordinate geographicCoordinate;
+
     private Measurement[] measurements;
     private int numMeasurements;
 
@@ -41,7 +42,7 @@ public abstract class Sensor implements ISensor {
      * As seguintes representam o parâmetro associado ao sensor (Ex: NO2 - Sigla do Dióxido de Azoto)
      * Um sensor apenas tem um parâmetro!
      * <p>
-     * Exemplos de codigos validos: QA0NO20001, METEMP0078, ME00PA0078
+     * Exemplos de códigos validos: QA0NO20001, METEMP0078, ME00PA0078
      */
     protected Sensor(String id,
                      double x, double y, double z,
@@ -50,6 +51,7 @@ public abstract class Sensor implements ISensor {
         sensorId = new SensorId(id);
         cartesianCoordinate = new CartesianCoordinate(x, y, z);
         geographicCoordinate = new GeographicCoordinate(lat, lng);
+        measurements = new Measurement[SENSOR_DEFAULT_CAPACITY];
     }
 
     public static Sensor SensorFactory(
@@ -63,7 +65,7 @@ public abstract class Sensor implements ISensor {
         else throw new SensorException("Invalid Sensor Type!");
     }
 
-    protected abstract void identifySensorParameter(String sensorId) throws SensorException;
+    protected abstract Parameter identifySensorParameter(String sensorId);
 
     private boolean exists(Measurement measurement) {
         for (Measurement m : measurements) {
@@ -73,7 +75,7 @@ public abstract class Sensor implements ISensor {
         return false;
     }
 
-    private boolean addElement(Measurement measurement) {
+    protected boolean addElement(Measurement measurement) {
         if (exists(measurement)) return false;
 
         Measurement[] copy = new Measurement[measurements.length + 1];
@@ -107,12 +109,7 @@ public abstract class Sensor implements ISensor {
     }
 
     @Override
-    public boolean addMeasurement(double v, LocalDateTime localDateTime, String s) throws SensorException, MeasurementException {
-        //if (defaultUnit != Unit.getUnitFromString(s))
-        //    throw new SensorException("Invalid Unit Measure for this Sensor!");
-
-        return addElement(new Measurement(v, localDateTime, s));
-    }
+    public abstract boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException;
 
     @Override
     public int getNumMeasurements() {
