@@ -67,25 +67,19 @@ public class Station implements IStation {
 
     @Override
     public boolean addSensor(ISensor sensor) throws StationException, SensorException {
-        // If array is full then grow array
-        if (elements == sensors.length) {
-            grow();
-        }
-
         if (sensor == null) {
             throw new StationException("Sensor Interface can't NULL");
         }
 
-        if (sensor instanceof Sensor s) {
-            if (!Sensor.validateSensorId(s.getId())) {
-                throw new SensorException("Sensor Id can't have less or more than 10 characters");
-            }
-
-            sensors[elements++] = s;
-            return true;
+        if (!(sensor instanceof Sensor s)) {
+            return false;
         }
 
-        return false;
+        if (!Sensor.validateSensorId(s.getId())) {
+            throw new SensorException("[Station] Sensor ID can't have more or less than 10 characters");
+        }
+
+        return addElement(s);
     }
 
     @Override
