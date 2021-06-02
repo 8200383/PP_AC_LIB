@@ -39,10 +39,10 @@ public class CartesianCoordinates implements ICartesianCoordinates {
 
     @Override
     public String toString() {
-        return "CartesianCoordinate{\n" +
-                "   xAxis=" + xAxis +
-                ",  yAxis=" + yAxis +
-                ",  zAxis=" + zAxis +
-                "\n }";
+        return "CartesianCoordinates{" +
+                "xAxis=" + xAxis +
+                ", yAxis=" + yAxis +
+                ", zAxis=" + zAxis +
+                '}';
     }
 }
