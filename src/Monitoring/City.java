@@ -35,7 +35,7 @@ public class City implements ICity {
         if (stationName == null) return null;
 
         for (Station station : stations) {
-            if (stationName.equals(station.getName())) return station;
+            if (station != null && stationName.equals(station.getName())) return station;
         }
 
         return null;
@@ -43,7 +43,7 @@ public class City implements ICity {
 
     private ISensor findSensorAtStationById(Station station, String sensorId) {
         for (ISensor sensor : station.getSensors()) {
-            if (sensorId.equals(sensor.getId())) return sensor;
+            if (sensor != null && sensor.getId().equals(sensorId)) return sensor;
         }
 
         return null;
