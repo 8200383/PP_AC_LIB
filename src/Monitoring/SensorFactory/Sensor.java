@@ -46,10 +46,7 @@ public abstract class Sensor implements ISensor {
     protected Sensor(String sensorId,
                      ICartesianCoordinates cartesianCoordinates,
                      IGeographicCoordinates geographicCoordinates
-    ) throws SensorException {
-
-        if (validateSensorId(sensorId)) throw new SensorException("Invalid Sensor ID Length");
-
+    ) {
         this.sensorId = sensorId;
         this.cartesianCoordinates = cartesianCoordinates;
         this.geographicCoordinates = geographicCoordinates;
@@ -61,6 +58,10 @@ public abstract class Sensor implements ISensor {
             ICartesianCoordinates cartesianCoordinates,
             IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
+        if (!validateSensorId(sensorId)) {
+            throw new SensorException("[Sensor] Sensor ID can't have more or less than 10 characters");
+        }
+
         if (sensorId.contains("QA")) {
             return new AirSensor(sensorId, cartesianCoordinates, geographicCoordinates);
         } else if (sensorId.contains("RU")) {

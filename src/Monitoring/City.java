@@ -98,8 +98,8 @@ public class City implements ICity {
         }
 
         // If caught from City returns a StationException otherwise return a SensorException
-        if (Sensor.validateSensorId(sensorId)) {
-            throw new StationException("Invalid Sensor ID");
+        if (!Sensor.validateSensorId(sensorId)) {
+            throw new StationException("[City] Sensor ID can't have more or less than 10 characters");
         }
 
         ISensor sensor = findSensorAtStationById(station, sensorId);
