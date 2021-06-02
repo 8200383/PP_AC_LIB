@@ -117,7 +117,7 @@ public class Station implements IStation {
         return "Station{" +
                 "name='" + name + '\'' +
                 ", sensors=" + Arrays.toString(sensors) +
-                ", elements=" + elements +
+                ", qteSensors=" + elements +
                 '}';
     }
 }

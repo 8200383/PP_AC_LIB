@@ -168,7 +168,7 @@ public class City implements ICity {
                 "cityId='" + cityId + '\'' +
                 ", cityName='" + cityName + '\'' +
                 ", stations=" + Arrays.toString(stations) +
-                ", elements=" + elements +
+                ", qteStations=" + elements +
                 '}';
     }
 }
