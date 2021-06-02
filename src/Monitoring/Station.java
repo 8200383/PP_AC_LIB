@@ -110,4 +110,13 @@ public class Station implements IStation {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Station{" +
+                "name='" + name + '\'' +
+                ", sensors=" + Arrays.toString(sensors) +
+                ", elements=" + elements +
+                '}';
+    }
 }
