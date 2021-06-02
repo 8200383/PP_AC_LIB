@@ -36,6 +36,30 @@ public class Station implements IStation {
         sensors = copy;
     }
 
+    private boolean exists(Sensor sensor) {
+        if (sensor == null) return false;
+
+        for (Sensor s : sensors) {
+            if (s != null && s.equals(sensor)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean addElement(Sensor sensor) {
+        if (exists(sensor)) return false;
+
+        // If array is full then grow array
+        if (elements == sensors.length) {
+            grow();
+        }
+
+        sensors[elements++] = sensor;
+        return true;
+    }
+
     @Override
     public String getName() {
         return name;

@@ -157,6 +157,14 @@ public abstract class Sensor implements ISensor {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sensor sensor = (Sensor) o;
+        return sensorId.equals(sensor.sensorId);
+    }
+
+    @Override
     public String toString() {
         return "Sensor{" +
                 "type=" + getType() +
