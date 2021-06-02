@@ -1,10 +1,7 @@
 package Monitoring;
 
-import Monitoring.SensorFactory.Enums.ParametersUnits;
-import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.Unit;
 import edu.ma02.core.exceptions.MeasurementException;
-import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.interfaces.IMeasurement;
 
 import java.time.LocalDateTime;
@@ -24,29 +21,22 @@ public class Measurement implements IMeasurement {
     private final LocalDateTime localDateTime;
     private final Unit unit;
 
-    public Measurement(double val, LocalDateTime dateTime,
-                       String unitMeasurement, Parameter sensorParameter
-    ) throws MeasurementException, SensorException {
-
-        if (!validateValueBounds(val)) {
+    public Measurement(double value, LocalDateTime localDateTime, Unit unit) throws MeasurementException {
+        if (!validateValueBounds(value)) {
             throw new MeasurementException("Measurement Value Out of Bounds");
         }
 
-        value = val;
-        localDateTime = dateTime;
-        unit = Unit.getUnitFromString(unitMeasurement);
-
-        if (!validateUnitMeasure(sensorParameter, unit)) {
-            throw new SensorException("Invalid Unit Measure for this Sensor!");
+        if (unit == null) {
+            throw new MeasurementException("Unit can't be NULL");
         }
+
+        this.value = value;
+        this.localDateTime = localDateTime;
+        this.unit = unit;
     }
 
     public boolean validateValueBounds(double val) {
         return val != -99;
-    }
-
-    private boolean validateUnitMeasure(Parameter parameter, Unit unit) {
-        return ParametersUnits.getUnitByParameter(parameter) == unit;
     }
 
     @Override

@@ -1,15 +1,10 @@
 package Monitoring.SensorFactory;
 
-import Monitoring.Measurement;
-import Monitoring.SensorFactory.Exceptions.UnrecognizedSensorParameter;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
-import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.interfaces.ICartesianCoordinates;
 import edu.ma02.core.interfaces.IGeographicCoordinates;
-
-import java.time.LocalDateTime;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -22,17 +17,13 @@ import java.time.LocalDateTime;
  */
 class NoiseSensor extends Sensor {
 
-    private final Parameter parameter;
-
     protected NoiseSensor(String sensorId,
                           ICartesianCoordinates cartesianCoordinates,
                           IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
         super(sensorId, cartesianCoordinates, geographicCoordinates);
 
-        if ((parameter = identifySensorParameter(sensorId)) == null) {
-            throw new UnrecognizedSensorParameter();
-        }
+        setParameter(identifySensorParameter(sensorId));
     }
 
     @Override
@@ -45,15 +36,4 @@ class NoiseSensor extends Sensor {
     public SensorType getType() {
         return SensorType.NOISE;
     }
-
-    @Override
-    public Parameter getParameter() {
-        return parameter;
-    }
-
-    @Override
-    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException {
-        return super.addElement(new Measurement(value, localDateTime, unit, parameter));
-    }
-
 }

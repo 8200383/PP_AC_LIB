@@ -116,19 +116,17 @@ public class City implements ICity {
                                   String unit, LocalDateTime localDateTime
     ) throws CityException, StationException, SensorException, MeasurementException {
         if (stationName == null) {
-            throw new CityException();
+            throw new CityException("Station Name can't be NULL");
         }
 
         IStation station = findStationByName(stationName);
         if (station == null) {
-            throw new CityException();
+            throw new CityException("Can't find any Station with that name");
         }
 
-        for (ISensor sensor : station.getSensors()) {
-            for (IMeasurement measurement : sensor.getMeasurements()) {
-                // TODO Visit Docs
-            }
-        }
+        /* Exceptions from Stations, Sensors and Measurement caught here
+         * This also already check if the collections stores thr measurement
+         */
         return station.addMeasurement(sensorId, value, localDateTime, unit);
     }
 
@@ -149,12 +147,12 @@ public class City implements ICity {
     }
 
     @Override
-    public IMeasurement[] getMeasurementsBySensor(String s) {
+    public IMeasurement[] getMeasurementsBySensor(String sensorId) {
         for (Station station : stations) {
             if (station != null) {
-                for (ISensor tempSensor : station.getSensors()) {
-                    if (tempSensor != null && tempSensor.getId().equals(s)) {
-                        return tempSensor.getMeasurements();
+                for (ISensor sensor : station.getSensors()) {
+                    if (sensor != null && sensor.getId().equals(sensorId)) {
+                        return sensor.getMeasurements();
                     }
                 }
             }

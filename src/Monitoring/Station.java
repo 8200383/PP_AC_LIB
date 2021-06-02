@@ -87,9 +87,7 @@ public class Station implements IStation {
     @Override
     public ISensor getSensor(String s) {
         for (Sensor sensor : sensors) {
-            if (sensor != null && sensor.getId().equals(s)) {
-                return sensor;
-            }
+            if (sensor != null && sensor.getId().equals(s)) return sensor;
         }
 
         return null;

@@ -1,8 +1,10 @@
 package Monitoring.SensorFactory;
 
 import Monitoring.Measurement;
+import Monitoring.SensorFactory.Enums.ParametersUnits;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
+import edu.ma02.core.enumerations.Unit;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.interfaces.ICartesianCoordinates;
@@ -28,6 +30,7 @@ public abstract class Sensor implements ISensor {
     private final ICartesianCoordinates cartesianCoordinates;
     private final IGeographicCoordinates geographicCoordinates;
 
+    private Parameter parameter;
     private Measurement[] measurements;
     private int numMeasurements;
 
@@ -64,7 +67,9 @@ public abstract class Sensor implements ISensor {
             return new NoiseSensor(sensorId, cartesianCoordinates, geographicCoordinates);
         } else if (sensorId.contains("ME")) {
             return new WeatherSensor(sensorId, cartesianCoordinates, geographicCoordinates);
-        } else throw new SensorException("Invalid Sensor Type!");
+        } else {
+            throw new SensorException("Invalid Sensor Type!");
+        }
     }
 
     public static boolean validateSensorId(String sensorId) {
@@ -99,16 +104,23 @@ public abstract class Sensor implements ISensor {
         return true;
     }
 
-    @Override
-    public String getId() {
-        return sensorId;
+    public void setParameter(Parameter parameter) throws SensorException {
+        if (parameter == null) throw new SensorException("Unrecognized Sensor Parameter");
+        this.parameter = parameter;
     }
 
     @Override
     public abstract SensorType getType();
 
     @Override
-    public abstract Parameter getParameter();
+    public String getId() {
+        return sensorId;
+    }
+
+    @Override
+    public Parameter getParameter() {
+        return parameter;
+    }
 
     @Override
     public ICartesianCoordinates getCartesianCoordinates() {
@@ -121,7 +133,18 @@ public abstract class Sensor implements ISensor {
     }
 
     @Override
-    public abstract boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException;
+    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unitStr) throws SensorException, MeasurementException {
+        Unit unit = Unit.getUnitFromString(unitStr);
+        if (unit == null) {
+            throw new SensorException("Invalid Unit of measure");
+        }
+
+        if (ParametersUnits.getUnitByParameter(parameter) != unit) {
+            throw new SensorException("Unit parameters don't match with the sensor parameter");
+        }
+
+        return addElement(new Measurement(value, localDateTime, unit));
+    }
 
     @Override
     public int getNumMeasurements() {
@@ -135,12 +158,14 @@ public abstract class Sensor implements ISensor {
 
     @Override
     public String toString() {
-        return "Sensor{\n" +
-                " sensorId=" + sensorId +
-                ",\n cartesianCoordinate=" + cartesianCoordinates.toString() +
-                ",\n geographicCoordinate=" + geographicCoordinates.toString() +
-                ",\n measurements=" + Arrays.toString(measurements) +
-                ",\n numMeasurements=" + numMeasurements +
-                "\n}";
+        return "Sensor{" +
+                "type=" + getType() +
+                ", sensorId='" + sensorId + '\'' +
+                ", cartesianCoordinates=" + cartesianCoordinates +
+                ", geographicCoordinates=" + geographicCoordinates +
+                ", parameter=" + parameter +
+                ", measurements=" + Arrays.toString(measurements) +
+                ", numMeasurements=" + numMeasurements +
+                '}';
     }
 }

@@ -1,10 +1,7 @@
 package Monitoring.SensorFactory;
 
-import Monitoring.Measurement;
-import Monitoring.SensorFactory.Exceptions.UnrecognizedSensorParameter;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
-import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.interfaces.ICartesianCoordinates;
 import edu.ma02.core.interfaces.IGeographicCoordinates;
@@ -22,17 +19,13 @@ import java.time.LocalDateTime;
  */
 class AirSensor extends Sensor {
 
-    private final Parameter parameter;
-
     protected AirSensor(String sensorId,
                         ICartesianCoordinates cartesianCoordinates,
                         IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
         super(sensorId, cartesianCoordinates, geographicCoordinates);
 
-        if ((parameter = identifySensorParameter(sensorId)) == null) {
-            throw new UnrecognizedSensorParameter();
-        }
+        setParameter(identifySensorParameter(sensorId));
     }
 
     @Override
@@ -43,7 +36,7 @@ class AirSensor extends Sensor {
             if (sensorId.contains(param.toString())) return param;
         }
 
-        //TODO: Perguntar ao stor
+        // TODO: Perguntar ao prof
         /* Special treatment for PM2_5*/
         return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
     }
@@ -51,15 +44,5 @@ class AirSensor extends Sensor {
     @Override
     public SensorType getType() {
         return SensorType.AIR;
-    }
-
-    @Override
-    public Parameter getParameter() {
-        return parameter;
-    }
-
-    @Override
-    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException {
-        return super.addElement(new Measurement(value, localDateTime, unit, parameter));
     }
 }
