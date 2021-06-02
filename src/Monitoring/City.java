@@ -132,7 +132,7 @@ public class City implements ICity {
 
     @Override
     public IStation[] getStations() {
-        return stations;
+        return stations.clone();
     }
 
     @Override

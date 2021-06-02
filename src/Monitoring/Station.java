@@ -81,7 +81,7 @@ public class Station implements IStation {
 
     @Override
     public ISensor[] getSensors() {
-        return sensors;
+        return sensors.clone();
     }
 
     @Override
