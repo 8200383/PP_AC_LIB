@@ -8,6 +8,7 @@ import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -159,5 +160,15 @@ public class City implements ICity {
         }
 
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "cityId='" + cityId + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", stations=" + Arrays.toString(stations) +
+                ", elements=" + elements +
+                '}';
     }
 }
