@@ -126,7 +126,7 @@ public class City implements ICity {
         }
 
         /* Exceptions from Stations, Sensors and Measurement caught here
-         * This also already check if the collections stores thr measurement
+         * This also checks if the collections stores the measurement
          */
         return station.addMeasurement(sensorId, value, localDateTime, unit);
     }
