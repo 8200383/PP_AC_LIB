@@ -1,4 +1,4 @@
-package Monitoring.Coordinates;
+package Core.Coordinates;
 
 import edu.ma02.core.interfaces.IGeographicCoordinates;
 

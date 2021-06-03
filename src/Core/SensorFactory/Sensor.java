@@ -1,7 +1,7 @@
-package Monitoring.SensorFactory;
+package Core.SensorFactory;
 
-import Monitoring.Measurement;
-import Monitoring.SensorFactory.Enums.ParametersUnits;
+import Core.Measurement;
+import Core.SensorFactory.Enums.ParametersUnits;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.enumerations.Unit;

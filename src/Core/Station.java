@@ -1,6 +1,6 @@
-package Monitoring;
+package Core;
 
-import Monitoring.SensorFactory.Sensor;
+import Core.SensorFactory.Sensor;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;

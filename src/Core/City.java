@@ -1,6 +1,6 @@
-package Monitoring;
+package Core;
 
-import Monitoring.SensorFactory.Sensor;
+import Core.SensorFactory.Sensor;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -21,13 +21,11 @@ import java.util.Arrays;
  */
 
 public class City implements ICity {
-    private final String cityId;
     private final String cityName;
     private Station[] stations;
     private int elements = 0;
 
-    public City(String id, String name) {
-        cityId = id;
+    public City(String name) {
         cityName = name;
         stations = new Station[10];
     }
@@ -58,7 +56,7 @@ public class City implements ICity {
 
     @Override
     public String getId() {
-        return cityId;
+        return cityName;
     }
 
     @Override
@@ -165,7 +163,7 @@ public class City implements ICity {
     @Override
     public String toString() {
         return "City{" +
-                "cityId='" + cityId + '\'' +
+                "cityId='" + cityName + '\'' +
                 ", cityName='" + cityName + '\'' +
                 ", stations=" + Arrays.toString(stations) +
                 ", qteStations=" + elements +

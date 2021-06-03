@@ -1,4 +1,4 @@
-package Monitoring;
+package Core;
 
 import edu.ma02.core.enumerations.Unit;
 import edu.ma02.core.exceptions.MeasurementException;

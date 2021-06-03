@@ -1,12 +1,10 @@
-package Monitoring.SensorFactory;
+package Core.SensorFactory;
 
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.interfaces.ICartesianCoordinates;
 import edu.ma02.core.interfaces.IGeographicCoordinates;
-
-import java.time.LocalDateTime;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -17,11 +15,11 @@ import java.time.LocalDateTime;
  * Número: 8200590
  * Turma: LEI1T3
  */
-class AirSensor extends Sensor {
+class WeatherSensor extends Sensor {
 
-    protected AirSensor(String sensorId,
-                        ICartesianCoordinates cartesianCoordinates,
-                        IGeographicCoordinates geographicCoordinates
+    protected WeatherSensor(String sensorId,
+                            ICartesianCoordinates cartesianCoordinates,
+                            IGeographicCoordinates geographicCoordinates
     ) throws SensorException {
         super(sensorId, cartesianCoordinates, geographicCoordinates);
 
@@ -29,20 +27,16 @@ class AirSensor extends Sensor {
     }
 
     @Override
-    public Parameter identifySensorParameter(String sensorId) {
-        for (Parameter param : SensorType.AIR.getParameters()) {
-            if (param == Parameter.PM2_5) continue;
-
+    protected Parameter identifySensorParameter(String sensorId) {
+        for (Parameter param : SensorType.WEATHER.getParameters()) {
             if (sensorId.contains(param.toString())) return param;
         }
 
-        // TODO: Perguntar ao prof
-        /* Special treatment for PM2_5*/
-        return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
+        return null;
     }
 
     @Override
     public SensorType getType() {
-        return SensorType.AIR;
+        return SensorType.WEATHER;
     }
 }

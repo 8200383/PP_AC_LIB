@@ -1,4 +1,4 @@
-package Monitoring.SensorFactory.Enums;
+package Core.SensorFactory.Enums;
 
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.Unit;
