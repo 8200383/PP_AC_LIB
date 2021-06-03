@@ -1,8 +1,8 @@
 package MA02;
 
-import Monitoring.City;
-import Monitoring.Coordinates.CartesianCoordinates;
-import Monitoring.Coordinates.GeographicCoordinates;
+import Core.City;
+import Core.Coordinates.CartesianCoordinates;
+import Core.Coordinates.GeographicCoordinates;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) {
+
+        // TODO Test all Core Package
 
         // Create a Logger
         Logger logger = Logger.getLogger(Main.class.getName());
@@ -26,7 +28,7 @@ public class Main {
                 -9.199692206
         ); */
 
-        City felgueiras = new City("1", "Felgueiras");
+        City felgueiras = new City("Felgueiras");
 
         try {
             felgueiras.addStation("Felgueiras Weather Station");
