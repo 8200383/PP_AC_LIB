@@ -96,18 +96,12 @@ public class Sensor implements ISensor {
         return false;
     }
 
-    private void grow() {
-        Measurement[] copy = new Measurement[measurements.length * 2];
-        System.arraycopy(measurements, 0, copy, 0, measurements.length);
-        measurements = copy;
-    }
-
-    protected boolean addElement(Measurement measurement) {
+    private boolean addElement(Measurement measurement) {
         if (exists(measurement)) return false;
 
         // If array is full then grow array
         if (numMeasurements == measurements.length) {
-            grow();
+            measurements = (Measurement[]) PrimitiveArrayUtils.grow(measurements);
         }
 
         measurements[numMeasurements++] = measurement;
