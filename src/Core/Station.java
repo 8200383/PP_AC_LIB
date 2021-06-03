@@ -1,6 +1,5 @@
 package Core;
 
-import Core.SensorFactory.Sensor;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
@@ -76,7 +75,7 @@ public class Station implements IStation {
             return false;
         }
 
-        if (!Sensor.validateSensorId(s.getId())) {
+        if (!Sensor.isSensorIdLengthValid(s.getId())) {
             throw new SensorException("[Station] Sensor ID can't have more or less than 10 characters");
         }
 

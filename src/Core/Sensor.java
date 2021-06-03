@@ -1,7 +1,7 @@
-package Core.SensorFactory;
+package Core;
 
-import Core.Measurement;
-import Core.SensorFactory.Enums.ParametersUnits;
+import Core.Enums.ParametersUnits;
+import Utils.PrimitiveArrayUtils;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.enumerations.Unit;
@@ -24,13 +24,14 @@ import java.util.Arrays;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public abstract class Sensor implements ISensor {
+public class Sensor implements ISensor {
 
     private final String sensorId;
     private final ICartesianCoordinates cartesianCoordinates;
     private final IGeographicCoordinates geographicCoordinates;
+    private final SensorType sensorType;
+    private final Parameter parameter;
 
-    private Parameter parameter;
     private Measurement[] measurements;
     private int numMeasurements;
 
@@ -43,41 +44,49 @@ public abstract class Sensor implements ISensor {
      * <p>
      * Exemplos de códigos validos: QA0NO20001, METEMP0078, ME00PA0078
      */
-    protected Sensor(String sensorId,
-                     ICartesianCoordinates cartesianCoordinates,
-                     IGeographicCoordinates geographicCoordinates
-    ) {
+    public Sensor(String sensorId,
+                  ICartesianCoordinates cartesianCoordinates,
+                  IGeographicCoordinates geographicCoordinates
+    ) throws SensorException {
+        if (!isSensorIdLengthValid(sensorId)) {
+            throw new SensorException("SensorId can't have more or less then 10 characters");
+        }
+
+        SensorType sensorType = identifySensorType(sensorId);
+        Parameter parameter = identifySensorParameter(sensorId);
+        if (sensorType == null || parameter == null) {
+            throw new SensorException("Invalid SensorId");
+        }
+
         this.sensorId = sensorId;
+        this.sensorType = sensorType;
+        this.parameter = parameter;
         this.cartesianCoordinates = cartesianCoordinates;
         this.geographicCoordinates = geographicCoordinates;
+
         measurements = new Measurement[10];
     }
 
-    public static Sensor SensorFactory(
-            String sensorId,
-            ICartesianCoordinates cartesianCoordinates,
-            IGeographicCoordinates geographicCoordinates
-    ) throws SensorException {
-        if (!validateSensorId(sensorId)) {
-            throw new SensorException("[Sensor] Sensor ID can't have more or less than 10 characters");
-        }
-
-        if (sensorId.contains("QA")) {
-            return new AirSensor(sensorId, cartesianCoordinates, geographicCoordinates);
-        } else if (sensorId.contains("RU")) {
-            return new NoiseSensor(sensorId, cartesianCoordinates, geographicCoordinates);
-        } else if (sensorId.contains("ME")) {
-            return new WeatherSensor(sensorId, cartesianCoordinates, geographicCoordinates);
-        } else {
-            throw new SensorException("Invalid Sensor Type!");
-        }
-    }
-
-    public static boolean validateSensorId(String sensorId) {
+    public static boolean isSensorIdLengthValid(String sensorId) {
         return sensorId.length() == 10;
     }
 
-    protected abstract Parameter identifySensorParameter(String sensorId);
+    private SensorType identifySensorType(String sensorId) {
+        if (sensorId.startsWith("QA")) return SensorType.AIR;
+        else if (sensorId.startsWith("RU")) return SensorType.NOISE;
+        else if (sensorId.startsWith("ME")) return SensorType.WEATHER;
+
+        return null;
+    }
+
+    private Parameter identifySensorParameter(String sensorId) {
+        for (Parameter param : sensorType.getParameters()) {
+            if (sensorId.contains(param.toString())) return param;
+        }
+
+        // TODO Perguntar ao professor se podemos validar o PM25
+        return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
+    }
 
     private boolean exists(Measurement measurement) {
         for (Measurement m : measurements) {
@@ -105,13 +114,10 @@ public abstract class Sensor implements ISensor {
         return true;
     }
 
-    public void setParameter(Parameter parameter) throws SensorException {
-        if (parameter == null) throw new SensorException("Unrecognized Sensor Parameter");
-        this.parameter = parameter;
-    }
-
     @Override
-    public abstract SensorType getType();
+    public SensorType getType() {
+        return sensorType;
+    }
 
     @Override
     public String getId() {

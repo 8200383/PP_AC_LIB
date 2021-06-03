@@ -1,6 +1,5 @@
 package Core;
 
-import Core.SensorFactory.Sensor;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -97,7 +96,7 @@ public class City implements ICity {
         }
 
         // If caught from City returns a StationException otherwise return a SensorException
-        if (!Sensor.validateSensorId(sensorId)) {
+        if (!Sensor.isSensorIdLengthValid(sensorId)) {
             throw new StationException("[City] Sensor ID can't have more or less than 10 characters");
         }
 
@@ -106,8 +105,7 @@ public class City implements ICity {
             throw new StationException("Sensor doesn't exist");
         }
 
-        // Create Sensor Object
-        return station.addSensor(Sensor.SensorFactory(sensorId, cartesianCoordinates, geographicCoordinates));
+        return station.addSensor(new Sensor(sensorId, cartesianCoordinates, geographicCoordinates));
     }
 
     @Override
