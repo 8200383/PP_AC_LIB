@@ -22,12 +22,12 @@ public class Measurement implements IMeasurement {
     private final Unit unit;
 
     public Measurement(double value, LocalDateTime localDateTime, Unit unit) throws MeasurementException {
-        if (!validateValueBounds(value)) {
-            throw new MeasurementException("Measurement Value Out of Bounds");
+        if (localDateTime == null || unit == null) {
+            throw new MeasurementException("Measurement parameters can't be NULL");
         }
 
-        if (unit == null) {
-            throw new MeasurementException("Unit can't be NULL");
+        if (!validateValueBounds(value)) {
+            throw new MeasurementException("Measurement Value Out of Bounds");
         }
 
         this.value = value;
