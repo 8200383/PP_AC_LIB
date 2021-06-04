@@ -1,7 +1,7 @@
 package Storage;
 
+import Core.City;
 import Storage.Exceptions.KeyNotFound;
-import Storage.Reports.CityReport;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.interfaces.ICity;
 import edu.ma02.io.interfaces.IExporter;
@@ -24,7 +24,11 @@ import java.io.IOException;
  * Turma: LEI1T3
  */
 public class Storage implements IImporter, IExporter {
-    CityReport[] citiesReports;
+    City[] cities;
+
+    public Storage() {
+        cities = new City[10];
+    }
 
     @Override
     public String export() throws IOException {
@@ -38,6 +42,10 @@ public class Storage implements IImporter, IExporter {
 
         // TODO Should loop on this
         JSONArray jsonArray = (JSONArray) JSONValue.parse(new FileReader(path));
+        for (Object o : jsonArray) {
+            JSONObject jsonObject = (JSONObject) o;
+            System.out.println(jsonObject.toString());
+        }
 
         // CityReport cityReport = new CityReport(jsonObject);
         // return cityReport.getImportationReport();
@@ -52,12 +60,4 @@ public class Storage implements IImporter, IExporter {
         return (obj instanceof JSONObject) ? (JSONObject) obj : null;
     }
 
-    // TODO Use this functions below for the Menu
-    public CityReport getCityReportById() {
-        return null;
-    }
-
-    public CityReport[] getCitiesReports() {
-        return citiesReports;
-    }
 }
