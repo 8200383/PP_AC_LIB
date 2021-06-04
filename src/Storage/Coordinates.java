@@ -24,8 +24,8 @@ public class Coordinates {
         }
 
         geographicCoordinates = new GeographicCoordinates(
-                (Double) coordinates.get("lat"),
-                (Double) coordinates.get("lng")
+                Double.parseDouble(coordinates.get("lat").toString()),
+                Double.parseDouble(coordinates.get("lng").toString())
         );
 
         if (!containsCartesianCoordinates(coordinates)) {
@@ -33,9 +33,9 @@ public class Coordinates {
         }
 
         cartesianCoordinates = new CartesianCoordinates(
-                (Double) coordinates.get("x"),
-                (Double) coordinates.get("y"),
-                (Double) coordinates.get("z")
+                Double.parseDouble(coordinates.get("x").toString()),
+                Double.parseDouble(coordinates.get("y").toString()),
+                Double.parseDouble(coordinates.get("z").toString())
         );
     }
 
