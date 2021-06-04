@@ -53,9 +53,13 @@ public class Sensor implements ISensor {
         }
 
         SensorType sensorType = identifySensorType(sensorId);
-        Parameter parameter = identifySensorParameter(sensorId);
-        if (sensorType == null || parameter == null) {
-            throw new SensorException("Invalid SensorId");
+        if (sensorType == null) {
+            throw new SensorException("Sensor Type couldn't be identified");
+        }
+
+        Parameter parameter = identifySensorParameter(sensorType, sensorId);
+        if (parameter == null) {
+            throw new SensorException("Sensor Parameter couldn't be identified");
         }
 
         this.sensorId = sensorId;
@@ -79,7 +83,15 @@ public class Sensor implements ISensor {
         return null;
     }
 
-    private Parameter identifySensorParameter(String sensorId) {
+    /**
+     * Identify the Sensor Parameter from the sensorId
+     *
+     * @param sensorId The sensorId to look for
+     * @return Returns a Parameter if the parameter is successful identified
+     * Returns Null if no parameter was found
+     * @implNote Call this method after call identifySensorType()
+     */
+    private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {
         for (Parameter param : sensorType.getParameters()) {
             if (sensorId.contains(param.toString())) return param;
         }
@@ -88,6 +100,13 @@ public class Sensor implements ISensor {
         return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
     }
 
+    /**
+     * Checks if a measurement already exists
+     *
+     * @param measurement The measurement to be validated
+     * @return true if a measurement is found or
+     * false if nothing is found
+     */
     private boolean exists(Measurement measurement) {
         for (Measurement m : measurements) {
             if (measurement.equals(m)) return true;
@@ -96,6 +115,13 @@ public class Sensor implements ISensor {
         return false;
     }
 
+    /**
+     * Adds a new element to a collection of measurements
+     *
+     * @param measurement The measurement to be added
+     * @return true if the measurement was inserted in the collection or
+     * false if the measurement already exists
+     */
     private boolean addElement(Measurement measurement) {
         if (exists(measurement)) return false;
 
