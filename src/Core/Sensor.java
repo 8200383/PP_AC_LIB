@@ -13,7 +13,6 @@ import edu.ma02.core.interfaces.IMeasurement;
 import edu.ma02.core.interfaces.ISensor;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
