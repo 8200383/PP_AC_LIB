@@ -1,5 +1,7 @@
 package Core;
 
+import edu.ma02.core.enumerations.AggregationOperator;
+import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -19,7 +21,7 @@ import java.util.Arrays;
  * Turma: LEI1T3
  */
 
-public class City implements ICity {
+public class City implements ICity, ICityStatistics {
     private final String cityName;
     private Station[] stations;
     private int elements = 0;
@@ -156,6 +158,42 @@ public class City implements ICity {
         }
 
         return null;
+    }
+
+    // TODO Search a Station compatible with those parameters
+    @Override
+    public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter,
+                                                  LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null && endDate == null) {
+            return getMeasurementsByStation(aggregationOperator, parameter);
+        }
+
+        return new IStatistics[0];
+    }
+
+    // TODO Start here before go up there, find a station compatible with the passed parameter
+    @Override
+    public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
+        // TODO Implement a switch case operator for the aggregation operator
+
+        return new IStatistics[0];
+    }
+
+    // TODO Those are relatively simple
+    @Override
+    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator,
+                                                 Parameter parameter, LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null && endDate == null) {
+            return getMeasurementsBySensor(stationName, aggregationOperator, parameter);
+        }
+
+        return new IStatistics[0];
+    }
+
+    // TODO Start here before go up there
+    @Override
+    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator, Parameter parameter) {
+        return new IStatistics[0];
     }
 
     @Override
