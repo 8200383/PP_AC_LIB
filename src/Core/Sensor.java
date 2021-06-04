@@ -193,12 +193,11 @@ public class Sensor implements ISensor {
     @Override
     public String toString() {
         return "Sensor{" +
-                "type=" + getType() +
+                "type=" + sensorType +
+                ", parameter=" + parameter +
                 ", sensorId='" + sensorId + '\'' +
                 ", cartesianCoordinates=" + cartesianCoordinates +
                 ", geographicCoordinates=" + geographicCoordinates +
-                ", parameter=" + parameter +
-                ", measurements=" + Arrays.toString(measurements) +
                 ", numMeasurements=" + numMeasurements +
                 '}';
     }
