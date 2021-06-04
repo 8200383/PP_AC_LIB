@@ -2,6 +2,9 @@ package Storage.Reports;
 
 import edu.ma02.io.interfaces.IOStatistics;
 
+import java.time.LocalDateTime;
+import java.util.logging.Logger;
+
 /*
  * Nome: Micael André Cunha Dias
  * Número: 8200383
@@ -12,6 +15,8 @@ import edu.ma02.io.interfaces.IOStatistics;
  * Turma: LEI1T3
  */
 public class ImportationReport implements IOStatistics {
+    private static Logger logger = Logger.getLogger(Storage.IO.class.getName());
+
     private int nNewMeasurementsRead;
     private int nMeasurementsRead;
     private int nNewStationsRead;
@@ -19,13 +24,28 @@ public class ImportationReport implements IOStatistics {
     private int nNewSensorRead;
     private int nSensorRead;
     private String[] caughtExceptions;
+    private int elements = 0;
 
     public ImportationReport() {
+        caughtExceptions = new String[10];
+    }
+
+    private void grow() {
+        String[] copy = new String[caughtExceptions.length * 2];
+        System.arraycopy(caughtExceptions, 0, copy, 0, caughtExceptions.length);
+        caughtExceptions = copy;
     }
 
     // TODO Implement Array
-    private void addException() {
+    public void addException(StackTraceElement[] stackTrace, String cause, boolean warning) {
+        if (elements == caughtExceptions.length) {
+            grow();
+        }
 
+        String warningMessage = "[" + stackTrace[0].getClassName() + "] " + cause;
+        if (warning) logger.warning(warningMessage);
+
+        caughtExceptions[elements++] = "[" + LocalDateTime.now() + "] " + warningMessage;
     }
 
     @Override
@@ -60,6 +80,8 @@ public class ImportationReport implements IOStatistics {
 
     @Override
     public String[] getExceptions() {
-        return new String[0];
+        String[] exceptions = new String[elements];
+        System.arraycopy(caughtExceptions, 0, exceptions, 0, elements);
+        return exceptions.clone();
     }
 }

@@ -2,7 +2,6 @@ package Storage;
 
 import Storage.Exceptions.KeyNotFound;
 import Storage.Reports.ImportationReport;
-import Utils.StorageLogger;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -19,7 +18,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Logger;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -77,7 +75,7 @@ public class IO implements IImporter, IExporter {
                         dateTime
                 );
             } catch (CityException | SensorException | KeyNotFound | StationException | MeasurementException e) {
-                importationReport.addException(e.getStackTrace(), e.getMessage());
+                importationReport.addException(e.getStackTrace(), e.getMessage(), false);
             }
         }
 
@@ -90,5 +88,4 @@ public class IO implements IImporter, IExporter {
         Object obj = doc.get(key);
         return (obj instanceof JSONObject) ? (JSONObject) obj : null;
     }
-
 }

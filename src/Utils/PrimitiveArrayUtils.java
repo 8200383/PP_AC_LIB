@@ -1,9 +1,5 @@
 package Utils;
 
-import Core.Measurement;
-
-import java.util.ArrayList;
-
 /*
  * Nome: Micael André Cunha Dias
  * Número: 8200383

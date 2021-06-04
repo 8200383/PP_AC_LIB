@@ -1,15 +1,12 @@
 package MA02;
 
 import Core.City;
-import Core.Coordinates.CartesianCoordinates;
-import Core.Coordinates.GeographicCoordinates;
-import Storage.Storage;
+import Storage.IO;
 import edu.ma02.core.exceptions.CityException;
-import edu.ma02.core.exceptions.SensorException;
-import edu.ma02.core.exceptions.StationException;
+import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
-import java.util.logging.Level;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Main {
@@ -29,27 +26,14 @@ public class Main {
                 -9.199692206
         ); */
 
-        City felgueiras = new City("Felgueiras");
+        City lisbon = new City("Lisbon");
 
-        try {
-            felgueiras.addStation("Felgueiras Weather Station");
-            logger.log(Level.INFO, "Station Created");
-        } catch (CityException ce) {
-            logger.log(Level.WARNING, ce.toString());
+        IO IO = new IO();
+        IOStatistics ioStatistics = IO.importData(lisbon, "resources/sensorData.json");
+        System.out.println(lisbon.getStations()[0].getSensors()[0].getId());
+
+        for (String exception : ioStatistics.getExceptions()) {
+            System.out.println(exception);
         }
-
-        try {
-            felgueiras.addSensor("Felgueiras Weather Station", "QA0NO20001",
-                    new CartesianCoordinates(-89255.1331, -105323.8973, 0),
-                    new GeographicCoordinates(38.71505459, -9.159338426)
-            );
-        } catch (CityException | StationException | SensorException e) {
-            logger.log(Level.WARNING, e.toString());
-        }
-
-        //System.out.println(Arrays.toString(felgueiras.getStations()));
-
-        Storage storage = new Storage();
-        storage.importData(felgueiras, "resources/sensorData.json");
     }
 }
