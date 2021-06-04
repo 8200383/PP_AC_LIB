@@ -3,16 +3,17 @@ package MA02;
 import Core.City;
 import Core.Coordinates.CartesianCoordinates;
 import Core.Coordinates.GeographicCoordinates;
+import Storage.Storage;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CityException, IOException {
 
         // TODO Test all Core Package
 
@@ -46,6 +47,9 @@ public class Main {
             logger.log(Level.WARNING, e.toString());
         }
 
-        System.out.println(Arrays.toString(felgueiras.getStations()));
+        //System.out.println(Arrays.toString(felgueiras.getStations()));
+
+        Storage storage = new Storage();
+        storage.importData(felgueiras, "resources/sensorData.json");
     }
 }
