@@ -50,13 +50,14 @@ public class IO implements IImporter, IExporter {
             JSONObject jsonObject = (JSONObject) o;
 
             try {
+                // TODO Always check if contains the key
                 if (!jsonObject.containsKey("address")) {
                     throw new KeyNotFound("Invalid Address field");
                 }
 
                 city.addStation(jsonObject.get("address").toString());
 
-                Coordinates coordinatesObject = new Coordinates((JSONObject) jsonObject.get("coordinates"));
+                Coordinates coordinatesObject = new Coordinates(getJsonObjectFromDocument(jsonObject, "coordinates"));
                 city.addSensor(
                         jsonObject.get("address").toString(),
                         jsonObject.get("id").toString(),
@@ -82,7 +83,6 @@ public class IO implements IImporter, IExporter {
         return importationReport;
     }
 
-    // TODO Use this to obtain Coordinates Object
     private JSONObject getJsonObjectFromDocument(JSONObject doc, String key) throws KeyNotFound {
         if (!doc.containsKey(key)) throw new KeyNotFound();
         Object obj = doc.get(key);
