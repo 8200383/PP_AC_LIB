@@ -1,6 +1,5 @@
 package Core;
 
-import Core.Enums.ParametersUnits;
 import Utils.PrimitiveArrayUtils;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
@@ -159,14 +158,10 @@ public class Sensor implements ISensor {
     }
 
     @Override
-    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unitStr) throws SensorException, MeasurementException {
-        Unit unit = Unit.getUnitFromString(unitStr);
-        if (unit == null) {
+    public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
+        Unit unit = parameter.getUnit();
+        if (unit != Unit.getUnitFromString(u)) {
             throw new SensorException("Invalid Unit of measure");
-        }
-
-        if (ParametersUnits.getUnitByParameter(parameter) != unit) {
-            throw new SensorException("Unit parameters don't match with the sensor parameter");
         }
 
         return addElement(new Measurement(value, localDateTime, unit));
