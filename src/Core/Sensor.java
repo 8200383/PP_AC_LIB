@@ -104,12 +104,12 @@ public class Sensor implements ISensor {
      * @return Returns a {@link Parameter} if the parameter is successful identified or null if no parameter was found
      * @implNote Call this method after call {@link #identifySensorType(String sensorId)}  }
      */
+    // TODO Um Sensor pode ter mais do que um parameter
     private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {
         for (Parameter param : sensorType.getParameters()) {
             if (sensorId.contains(param.toString())) return param;
         }
 
-        // TODO Perguntar ao professor se podemos validar o PM25
         return sensorId.contains("PM25") ? Parameter.PM2_5 : null;
     }
 
@@ -181,6 +181,7 @@ public class Sensor implements ISensor {
 
     @Override
     public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
+        // TODO Considerar Mbar para lower case
         if (parameter.getUnit() != Unit.getUnitFromString(u)) {
             throw new SensorException("Invalid Unit of measure for this sensor");
         }
