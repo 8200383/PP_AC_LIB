@@ -1,6 +1,5 @@
 package Core;
 
-import edu.ma02.core.enumerations.Unit;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.interfaces.IMeasurement;
 
@@ -19,11 +18,18 @@ public class Measurement implements IMeasurement {
 
     private final double value;
     private final LocalDateTime localDateTime;
-    private final Unit unit;
 
-    public Measurement(double value, LocalDateTime localDateTime, Unit unit) throws MeasurementException {
-        if (localDateTime == null || unit == null) {
-            throw new MeasurementException("Measurement parameters can't be NULL");
+    /**
+     * Constructor for {@link Measurement}
+     *
+     * @param value         The read value
+     * @param localDateTime The time of the read
+     * @throws MeasurementException If the {@link LocalDateTime localDateTime} is null or
+     *                              {@link Double value} is out of bounds
+     */
+    public Measurement(double value, LocalDateTime localDateTime) throws MeasurementException {
+        if (localDateTime == null) {
+            throw new MeasurementException("DateTime can't be NULL");
         }
 
         if (!validateValueBounds(value)) {
@@ -32,10 +38,14 @@ public class Measurement implements IMeasurement {
 
         this.value = value;
         this.localDateTime = localDateTime;
-        this.unit = unit;
     }
 
-    public boolean validateValueBounds(double val) {
+    /**
+     * Validate bounds for the measurement
+     * @param val The read value
+     * @return Return if the {@link Double val} is valid
+     */
+    private boolean validateValueBounds(double val) {
         return val != -99;
     }
 
@@ -60,8 +70,8 @@ public class Measurement implements IMeasurement {
     @Override
     public String toString() {
         return "Measurement{" +
-                "localDateTime=" + localDateTime.toString() +
-                ", value=" + value + Unit.getUnitString(unit) +
-                "}";
+                "value=" + value +
+                ", localDateTime=" + localDateTime +
+                '}';
     }
 }

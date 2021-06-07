@@ -38,8 +38,8 @@ public class Station implements IStation {
     private boolean exists(Sensor sensor) {
         if (sensor == null) return false;
 
-        for (Sensor s : sensors) {
-            if (s != null && s.equals(sensor)) {
+        for (ISensor s : getSensors()) {
+            if (s.equals(sensor)) {
                 return true;
             }
         }
@@ -70,15 +70,15 @@ public class Station implements IStation {
             throw new StationException("Sensor Interface can't NULL");
         }
 
-        if (!(sensor instanceof Sensor s)) {
-            return false;
+        if (sensor instanceof Sensor s) {
+            if (!Sensor.isSensorIdLengthValid(s.getId())) {
+                throw new SensorException("[Station] Sensor ID can't have more or less than 10 characters");
+            }
+
+            return addElement(s);
         }
 
-        if (!Sensor.isSensorIdLengthValid(s.getId())) {
-            throw new SensorException("[Station] Sensor ID can't have more or less than 10 characters");
-        }
-
-        return addElement(s);
+        return false;
     }
 
     @Override
@@ -87,8 +87,8 @@ public class Station implements IStation {
             throw new StationException("Parameters can't be NULL");
         }
 
-        for (Sensor sensor : sensors) {
-            if (sensor != null && sensor.getId().equals(sensorId)) {
+        for (ISensor sensor : getSensors()) {
+            if (sensor.getId().equals(sensorId)) {
                 return sensor.addMeasurement(value, date, unit);
             }
         }
@@ -98,13 +98,17 @@ public class Station implements IStation {
 
     @Override
     public ISensor[] getSensors() {
-        return sensors.clone();
+        if (elements == 0) return new ISensor[]{};
+
+        Sensor[] copy = new Sensor[elements];
+        System.arraycopy(sensors, 0, copy, 0, elements);
+        return copy.clone();
     }
 
     @Override
-    public ISensor getSensor(String s) {
-        for (Sensor sensor : sensors) {
-            if (sensor != null && sensor.getId().equals(s)) return sensor;
+    public ISensor getSensor(String sensorId) {
+        for (ISensor sensor : getSensors()) {
+            if (sensor.getId().equals(sensorId)) return sensor;
         }
 
         return null;

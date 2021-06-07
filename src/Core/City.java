@@ -9,7 +9,6 @@ import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -26,33 +25,55 @@ public class City implements ICity, ICityStatistics {
     private Station[] stations;
     private int elements = 0;
 
+    /**
+     * Constructor for {@link City}
+     *
+     * @param name The name of the city
+     */
+    // TODO Perguntar ao prof sobre o cityId
     public City(String name) {
         cityName = name;
         stations = new Station[10];
     }
 
-    private Station findStationByName(String stationName) {
-        if (stationName == null) return null;
-
-        for (Station station : stations) {
-            if (station != null && stationName.equals(station.getName())) return station;
-        }
-
-        return null;
-    }
-
-    private ISensor findSensorAtStationById(Station station, String sensorId) {
-        for (ISensor sensor : station.getSensors()) {
-            if (sensor != null && sensor.getId().equals(sensorId)) return sensor;
-        }
-
-        return null;
-    }
-
+    /**
+     * Grow the array of {@link Station stations}
+     */
     private void grow() {
         Station[] copy = new Station[stations.length * 2];
-        System.arraycopy(stations, 0, copy, 0, stations.length);
+        System.arraycopy(stations, 0, copy, 0, elements);
         stations = copy;
+    }
+
+    /**
+     * Finds a {@link Station} by {@link String stationName}
+     *
+     * @param stationName The of the station to look for
+     * @return Returns an instance of {@link Station}
+     */
+    private IStation findStationByName(String stationName) {
+        if (stationName == null) return null;
+
+        for (IStation station : getStations()) {
+            if (stationName.equals(station.getName())) return station;
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds a {@link Sensor sensor} at {@link IStation station} by {@link String sensorId}
+     *
+     * @param station  The station where to look
+     * @param sensorId The sensorId to look for
+     * @return Returns an instante of a {@link Sensor}
+     */
+    private ISensor findSensorAtStationById(IStation station, String sensorId) {
+        for (ISensor sensor : station.getSensors()) {
+            if (sensor.getId().equals(sensorId)) return sensor;
+        }
+
+        return null;
     }
 
     @Override
@@ -92,7 +113,7 @@ public class City implements ICity, ICityStatistics {
             throw new CityException("Station Name can't be NULL");
         }
 
-        Station station = findStationByName(stationName);
+        IStation station = findStationByName(stationName);
         if (station == null) {
             throw new CityException("Station not found");
         }
@@ -131,7 +152,11 @@ public class City implements ICity, ICityStatistics {
 
     @Override
     public IStation[] getStations() {
-        return stations.clone();
+        if (elements == 0) return new IStation[]{};
+
+        Station[] copy = new Station[elements];
+        System.arraycopy(stations, 0, copy, 0, elements);
+        return copy.clone();
     }
 
     @Override
@@ -147,12 +172,10 @@ public class City implements ICity, ICityStatistics {
 
     @Override
     public IMeasurement[] getMeasurementsBySensor(String sensorId) {
-        for (Station station : stations) {
-            if (station != null) {
-                for (ISensor sensor : station.getSensors()) {
-                    if (sensor != null && sensor.getId().equals(sensorId)) {
-                        return sensor.getMeasurements();
-                    }
+        for (IStation station : getStations()) {
+            for (ISensor sensor : station.getSensors()) {
+                if (sensor.getId().equals(sensorId)) {
+                    return sensor.getMeasurements();
                 }
             }
         }
@@ -176,7 +199,81 @@ public class City implements ICity, ICityStatistics {
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
         // TODO Implement a switch case operator for the aggregation operator
 
-        return new IStatistics[0];
+        Statistics[] statistics = new Statistics[10];
+        int elements = 0;
+
+        // Pode haver mais do que um sensor com o mesmo parameter mas noutra estação
+        for (IStation station : getStations()) {
+            for (ISensor sensor : station.getSensors()) {
+                if (sensor.getParameter() == parameter) {
+
+                    if (elements == statistics.length) {
+                        Statistics[] copy = new Statistics[statistics.length * 2];
+                        System.arraycopy(statistics, 0, copy, 0, statistics.length);
+                        statistics = copy;
+                    }
+
+                    switch (aggregationOperator) {
+                        case AVG -> {
+                            double values = 0.0;
+
+                            // Média de measurements por sensor
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                values += measurement.getValue();
+
+                            }
+
+                            double average = sensor.getNumMeasurements() / values;
+                            statistics[elements++] = new Statistics(
+                                    "Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName() +
+                                            ", Unit=" + sensor.getParameter().getUnit() +
+                                            ", Parameter=" + sensor.getParameter().toString(), average);
+                        }
+                        case COUNT -> {
+                            statistics[elements++] = new Statistics(
+                                    "Count of Measurements By Station" +
+                                            ", Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName(), sensor.getNumMeasurements());
+                        }
+                        case MAX -> {
+                            IMeasurement[] measurements = sensor.getMeasurements();
+                            if (measurements == null) break;
+
+                            double max = measurements[0].getValue();
+                            for (IMeasurement measurement : measurements) {
+                                if (measurement.getValue() > max) {
+                                    max = measurement.getValue();
+                                }
+                            }
+
+                            statistics[elements++] = new Statistics(
+                                    "Maximum of Measurements By Station" +
+                                            ", Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName(), max);
+                        }
+                        case MIN -> {
+                            IMeasurement[] measurements = sensor.getMeasurements();
+                            if (measurements == null) break;
+
+                            double min = measurements[0].getValue();
+                            for (IMeasurement measurement : measurements) {
+                                if (measurement.getValue() < min) {
+                                    min = measurement.getValue();
+                                }
+                            }
+
+                            statistics[elements++] = new Statistics(
+                                    "Minimum of Measurements By Station" +
+                                            ", Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName(), min);
+                        }
+                    }
+                }
+            }
+        }
+
+        return statistics;
     }
 
     // TODO Those are relatively simple
@@ -199,10 +296,8 @@ public class City implements ICity, ICityStatistics {
     @Override
     public String toString() {
         return "City{" +
-                "cityId='" + cityName + '\'' +
-                ", cityName='" + cityName + '\'' +
-                ", stations=" + Arrays.toString(stations) +
-                ", qteStations=" + elements +
+                "cityName='" + cityName + '\'' +
+                ", elements=" + elements +
                 '}';
     }
 }

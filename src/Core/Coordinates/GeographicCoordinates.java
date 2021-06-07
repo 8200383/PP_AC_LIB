@@ -13,14 +13,14 @@ import edu.ma02.core.interfaces.IGeographicCoordinates;
  */
 public class GeographicCoordinates implements IGeographicCoordinates {
 
-    /**
-     * Geographic Coordinates
-     */
     private final double latitude;
     private final double longitude;
 
     /**
-     * Constructor for a Geographic Coordinate System
+     * Constructor for {@link GeographicCoordinates}
+     *
+     * @param lat The value of the {@link Double latitude}
+     * @param lng The value of the {@link Double longitude}
      */
     public GeographicCoordinates(double lat, double lng) {
         latitude = lat;

@@ -1,13 +1,11 @@
 package Storage;
 
 import Storage.Exceptions.KeyNotFound;
-import Storage.Reports.ImportationReport;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.ICity;
-import edu.ma02.io.interfaces.IExporter;
 import edu.ma02.io.interfaces.IImporter;
 import edu.ma02.io.interfaces.IOStatistics;
 import org.json.simple.JSONArray;
@@ -28,17 +26,9 @@ import java.time.format.DateTimeFormatter;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class IO implements IImporter, IExporter {
+public class JsonImporter implements IImporter {
 
-    public IO() {
-    }
-
-    @Override
-    public String export() throws IOException {
-        return null;
-    }
-
-    /* TODO Perguntar ao prof: There is a more generic FileNotFoundException */
+    // TODO Perguntar ao prof: There is a more generic FileNotFoundException
     @Override
     public IOStatistics importData(ICity city, String path) throws IOException, CityException {
         if (city == null) throw new CityException("City can't be NULL");
@@ -50,42 +40,48 @@ public class IO implements IImporter, IExporter {
             JSONObject jsonObject = (JSONObject) o;
 
             try {
-                // TODO Always check if contains the key
-                if (!jsonObject.containsKey("address")) {
-                    throw new KeyNotFound("Invalid Address field");
+                boolean jsonOk = jsonObject.containsKey("address") &&
+                        jsonObject.containsKey("coordinates") &&
+                        jsonObject.containsKey("id") &&
+                        jsonObject.containsKey("date") &&
+                        jsonObject.containsKey("value") &&
+                        jsonObject.containsKey("unit");
+
+                if (!jsonOk) {
+                    throw new KeyNotFound("Invalid JsonObject");
                 }
 
-                city.addStation(jsonObject.get("address").toString());
+                if (city.addStation(jsonObject.get("address").toString())) {
+                    importationReport.increaseReadStation();
+                }
 
-                Coordinates coordinatesObject = new Coordinates(getJsonObjectFromDocument(jsonObject, "coordinates"));
-                city.addSensor(
+                CoordinatesObject coordinatesObject = new CoordinatesObject((JSONObject) jsonObject.get("coordinates"));
+                if (city.addSensor(
                         jsonObject.get("address").toString(),
                         jsonObject.get("id").toString(),
                         coordinatesObject.getCartesianCoordinates(),
                         coordinatesObject.getGeographicCoordinates()
-                );
+                )) {
+                    importationReport.increaseReadSensor();
+                }
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
                 LocalDateTime dateTime = LocalDateTime.parse(jsonObject.get("date").toString(), formatter);
 
-                city.addMeasurement(
+                if (city.addMeasurement(
                         jsonObject.get("address").toString(),
                         jsonObject.get("id").toString(),
                         Double.parseDouble(jsonObject.get("value").toString()),
                         jsonObject.get("unit").toString(),
                         dateTime
-                );
+                )) {
+                    importationReport.increaseReadMeasurement();
+                }
             } catch (CityException | SensorException | KeyNotFound | StationException | MeasurementException e) {
-                importationReport.addException(e.getStackTrace(), e.getMessage(), false);
+                importationReport.addException(e.getStackTrace(), e.getMessage());
             }
         }
 
         return importationReport;
-    }
-
-    private JSONObject getJsonObjectFromDocument(JSONObject doc, String key) throws KeyNotFound {
-        if (!doc.containsKey(key)) throw new KeyNotFound();
-        Object obj = doc.get(key);
-        return (obj instanceof JSONObject) ? (JSONObject) obj : null;
     }
 }

@@ -12,13 +12,22 @@ import edu.ma02.core.interfaces.IStatistics;
  * Turma: LEI1T3
  */
 public class Statistics implements IStatistics {
+
+    String description;
+    double value;
+
+    public Statistics(String description, double value) {
+        this.description = description;
+        this.value = value;
+    }
+
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public double getValue() {
-        return 0;
+        return value;
     }
 }

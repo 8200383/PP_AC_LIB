@@ -16,6 +16,13 @@ public class CartesianCoordinates implements ICartesianCoordinates {
     private final double yAxis;
     private final double zAxis;
 
+    /**
+     * Constructor for {@link CartesianCoordinates}
+     *
+     * @param x The value of the {@link Double x} axe
+     * @param y The value of the {@link Double y} axe
+     * @param z The value of the {@link Double z} axe
+     */
     public CartesianCoordinates(double x, double y, double z) {
         xAxis = x;
         yAxis = y;

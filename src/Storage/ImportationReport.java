@@ -1,9 +1,8 @@
-package Storage.Reports;
+package Storage;
 
 import edu.ma02.io.interfaces.IOStatistics;
 
 import java.time.LocalDateTime;
-import java.util.logging.Logger;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -15,14 +14,12 @@ import java.util.logging.Logger;
  * Turma: LEI1T3
  */
 public class ImportationReport implements IOStatistics {
-    private static Logger logger = Logger.getLogger(Storage.IO.class.getName());
-
     private int nNewMeasurementsRead;
     private int nMeasurementsRead;
     private int nNewStationsRead;
     private int nStationsRead;
-    private int nNewSensorRead;
-    private int nSensorRead;
+    private int nNewSensorsRead;
+    private int nSensorsRead;
     private String[] caughtExceptions;
     private int elements = 0;
 
@@ -36,50 +33,62 @@ public class ImportationReport implements IOStatistics {
         caughtExceptions = copy;
     }
 
-    // TODO Implement Array
-    public void addException(StackTraceElement[] stackTrace, String cause, boolean warning) {
+    public void addException(StackTraceElement[] stackTrace, String cause) {
         if (elements == caughtExceptions.length) {
             grow();
         }
 
-        String warningMessage = "[" + stackTrace[0].getClassName() + "] " + cause;
-        if (warning) logger.warning(warningMessage);
+        String exceptionMessage = "[" + LocalDateTime.now() + "] [" + stackTrace[0].getClassName() + "] " + cause;
 
-        caughtExceptions[elements++] = "[" + LocalDateTime.now() + "] " + warningMessage;
+        caughtExceptions[elements++] = exceptionMessage;
+    }
+
+    public void increaseReadStation() {
+        nNewStationsRead++;
+    }
+
+    public void increaseReadSensor() {
+        nNewSensorsRead++;
+    }
+
+    public void increaseReadMeasurement() {
+        nNewMeasurementsRead++;
     }
 
     @Override
     public int getNumberOfReadMeasurements() {
-        return nNewMeasurementsRead;
-    }
-
-    @Override
-    public int getNumberOfNewStationsRead() {
         return nMeasurementsRead;
     }
 
     @Override
-    public int getNumberOfStationsRead() {
+    public int getNumberOfNewStationsRead() {
         return nNewStationsRead;
     }
 
     @Override
-    public int getNumberOfSensorsRead() {
+    public int getNumberOfStationsRead() {
         return nStationsRead;
     }
 
     @Override
+    public int getNumberOfSensorsRead() {
+        return nSensorsRead;
+    }
+
+    @Override
     public int getNumberOfNewSensorsRead() {
-        return nNewSensorRead;
+        return nNewSensorsRead;
     }
 
     @Override
     public int getNumberOfNewMeasurementsRead() {
-        return nSensorRead;
+        return nNewMeasurementsRead;
     }
 
     @Override
     public String[] getExceptions() {
+        if (elements == 0) return new String[]{};
+
         String[] exceptions = new String[elements];
         System.arraycopy(caughtExceptions, 0, exceptions, 0, elements);
         return exceptions.clone();

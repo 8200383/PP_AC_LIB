@@ -1,6 +1,5 @@
 package Core;
 
-import Utils.PrimitiveArrayUtils;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.enumerations.SensorType;
 import edu.ma02.core.enumerations.Unit;
@@ -34,12 +33,15 @@ public class Sensor implements ISensor {
     private int numMeasurements;
 
     /**
-     * Restrições:
-     * O código do sensor tem apenas 10 caracteres
+     * Constructor for {@link Sensor}
+     *
+     * @param sensorId              The Sensor Id
+     * @param cartesianCoordinates  An interface of {@link ICartesianCoordinates}
+     * @param geographicCoordinates An interface of {@link IGeographicCoordinates}
+     * @apiNote O código do sensor tem apenas 10 caracteres
      * Primeiras letras representam o tipo de sensor (Ex: QA - Qualidade do Ar)
      * As seguintes representam o parâmetro associado ao sensor (Ex: NO2 - Sigla do Dióxido de Azoto)
      * Um sensor apenas tem um parâmetro!
-     * <p>
      * Exemplos de códigos validos: QA0NO20001, METEMP0078, ME00PA0078
      */
     public Sensor(String sensorId,
@@ -69,10 +71,23 @@ public class Sensor implements ISensor {
         measurements = new Measurement[10];
     }
 
+    /**
+     * Validate if {@link String sensorId} has a valid length
+     *
+     * @param sensorId The {@link String sensorId}
+     * @return Returns true if the @link String sensorId} has a valid length
+     * @apiNote Used in {@link City}, {@link Station} and {@link Sensor}
+     */
     public static boolean isSensorIdLengthValid(String sensorId) {
         return sensorId.length() == 10;
     }
 
+    /**
+     * Identify {@link SensorType}
+     *
+     * @param sensorId The {@link String sensorId} to validate
+     * @return Returns a {@link SensorType} if the {@link String sensorId} is valid
+     */
     private SensorType identifySensorType(String sensorId) {
         if (sensorId.startsWith("QA")) return SensorType.AIR;
         else if (sensorId.startsWith("RU")) return SensorType.NOISE;
@@ -82,12 +97,12 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Identify the Sensor Parameter from the sensorId
+     * Identify the sensor {@link Parameter} from the {@link String sensorId}
      *
-     * @param sensorId The sensorId to look for
-     * @return Returns a Parameter if the parameter is successful identified
-     * Returns Null if no parameter was found
-     * @implNote Call this method after call identifySensorType()
+     * @param sensorId   The {@link String sensorId} to validate
+     * @param sensorType The previous identified {@link SensorType sensorType}
+     * @return Returns a {@link Parameter} if the parameter is successful identified or null if no parameter was found
+     * @implNote Call this method after call {@link #identifySensorType(String sensorId)}  }
      */
     private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {
         for (Parameter param : sensorType.getParameters()) {
@@ -99,14 +114,13 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Checks if a measurement already exists
+     * Checks if a {@link Measurement} already exists
      *
-     * @param measurement The measurement to be validated
-     * @return true if a measurement is found or
-     * false if nothing is found
+     * @param measurement The {@link Measurement measurement} to be validated
+     * @return true if a {@link Measurement} is found or false if nothing is found
      */
     private boolean exists(Measurement measurement) {
-        for (Measurement m : measurements) {
+        for (IMeasurement m : getMeasurements()) {
             if (measurement.equals(m)) return true;
         }
 
@@ -114,22 +128,30 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Adds a new element to a collection of measurements
+     * Adds a new element to an array of {@link #measurements}
      *
-     * @param measurement The measurement to be added
-     * @return true if the measurement was inserted in the collection or
-     * false if the measurement already exists
+     * @param measurement The {@link Measurement measurement} to be added
+     * @return true if the {@link Measurement} was inserted in the collection or false if the {@link Measurement} already exists
      */
     private boolean addElement(Measurement measurement) {
         if (exists(measurement)) return false;
 
         // If array is full then grow array
         if (numMeasurements == measurements.length) {
-            measurements = (Measurement[]) PrimitiveArrayUtils.grow(measurements);
+            grow();
         }
 
         measurements[numMeasurements++] = measurement;
         return true;
+    }
+
+    /**
+     * Grow an array of {@link Measurement}
+     */
+    private void grow() {
+        Measurement[] copy = new Measurement[measurements.length * 2];
+        System.arraycopy(measurements, 0, copy, 0, numMeasurements);
+        measurements = copy;
     }
 
     @Override
@@ -159,12 +181,11 @@ public class Sensor implements ISensor {
 
     @Override
     public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
-        Unit unit = parameter.getUnit();
-        if (unit != Unit.getUnitFromString(u)) {
-            throw new SensorException("Invalid Unit of measure");
+        if (parameter.getUnit() != Unit.getUnitFromString(u)) {
+            throw new SensorException("Invalid Unit of measure for this sensor");
         }
 
-        return addElement(new Measurement(value, localDateTime, unit));
+        return addElement(new Measurement(value, localDateTime));
     }
 
     @Override
@@ -172,11 +193,27 @@ public class Sensor implements ISensor {
         return numMeasurements;
     }
 
+    /**
+     * Return a copy of the existing {@link #measurements}
+     *
+     * @return A trimmed clone of {@link #measurements}
+     * @apiNote Use this function to prevent null checks
+     */
     @Override
     public IMeasurement[] getMeasurements() {
-        return measurements.clone();
+        if (numMeasurements == 0) return new IMeasurement[]{};
+
+        Measurement[] copy = new Measurement[numMeasurements];
+        System.arraycopy(measurements, 0, copy, 0, numMeasurements);
+        return copy.clone();
     }
 
+    /**
+     * Compare {@link Sensor} by {@link #sensorId}
+     *
+     * @param o The {@link Object object} to compare
+     * @return Return true if {@link #sensorId} is equals in both classes
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
