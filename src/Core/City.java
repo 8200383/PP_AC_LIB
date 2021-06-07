@@ -271,7 +271,7 @@ public class City implements ICity, ICityStatistics {
             }
         }
 
-        return statistics;
+        return statistics.clone();
     }
 
     // TODO Those are relatively simple
