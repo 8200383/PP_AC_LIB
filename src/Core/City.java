@@ -230,12 +230,10 @@ public class City implements ICity, ICityStatistics {
                                             ", Unit=" + sensor.getParameter().getUnit() +
                                             ", Parameter=" + sensor.getParameter().toString(), average);
                         }
-                        case COUNT -> {
-                            statistics[elements++] = new Statistics(
-                                    "Count of Measurements By Station" +
-                                            ", Sensor=" + sensor.getId() +
-                                            ", Station=" + station.getName(), sensor.getNumMeasurements());
-                        }
+                        case COUNT -> statistics[elements++] = new Statistics(
+                                "Count of Measurements By Station" +
+                                        ", Sensor=" + sensor.getId() +
+                                        ", Station=" + station.getName(), sensor.getNumMeasurements());
                         case MAX -> {
                             IMeasurement[] measurements = sensor.getMeasurements();
                             if (measurements == null) break;

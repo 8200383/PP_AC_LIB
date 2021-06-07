@@ -2,16 +2,10 @@ package MA02;
 
 import Core.*;
 import Storage.JsonImporter;
-import edu.ma02.core.enumerations.AggregationOperator;
-import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
-import edu.ma02.core.interfaces.*;
 import edu.ma02.io.interfaces.IOStatistics;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.logging.Logger;
 
 /*
  * Nome: Micael André Cunha Dias

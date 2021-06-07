@@ -28,7 +28,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class JsonImporter implements IImporter {
 
-    // TODO Perguntar ao prof: There is a more generic FileNotFoundException
     @Override
     public IOStatistics importData(ICity city, String path) throws IOException, CityException {
         if (city == null) throw new CityException("City can't be NULL");

@@ -83,7 +83,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Identify {@link SensorType}
+     * Identify the {@link SensorType}
      *
      * @param sensorId The {@link String sensorId} to validate
      * @return Returns a {@link SensorType} if the {@link String sensorId} is valid
