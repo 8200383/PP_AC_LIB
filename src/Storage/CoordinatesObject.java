@@ -14,23 +14,25 @@ import org.json.simple.JSONObject;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class Coordinates {
+public class CoordinatesObject {
     private final GeographicCoordinates geographicCoordinates;
     private final CartesianCoordinates cartesianCoordinates;
 
-    public Coordinates(JSONObject coordinates) throws KeyNotFound {
-        if (!containsGeographicCoordinates(coordinates)) {
-            throw new KeyNotFound("Geographic Coordinates not found");
+    public CoordinatesObject(JSONObject coordinates) throws KeyNotFound {
+        boolean coordinatesOk = coordinates.containsKey("lat") &&
+                coordinates.containsKey("lng") &&
+                coordinates.containsKey("x") &&
+                coordinates.containsKey("y") &&
+                coordinates.containsKey("z");
+
+        if (!coordinatesOk) {
+            throw new KeyNotFound("Invalid Coordinates JsonObject");
         }
 
         geographicCoordinates = new GeographicCoordinates(
                 Double.parseDouble(coordinates.get("lat").toString()),
                 Double.parseDouble(coordinates.get("lng").toString())
         );
-
-        if (!containsCartesianCoordinates(coordinates)) {
-            throw new KeyNotFound("Cartesian Coordinates not found");
-        }
 
         cartesianCoordinates = new CartesianCoordinates(
                 Double.parseDouble(coordinates.get("x").toString()),
@@ -39,13 +41,6 @@ public class Coordinates {
         );
     }
 
-    private boolean containsGeographicCoordinates(JSONObject coordinates) {
-        return coordinates.containsKey("lat") && coordinates.containsKey("lng");
-    }
-
-    private boolean containsCartesianCoordinates(JSONObject coordinates) {
-        return coordinates.containsKey("x") && coordinates.containsKey("y") && coordinates.containsKey("z");
-    }
 
     public GeographicCoordinates getGeographicCoordinates() {
         return geographicCoordinates;
