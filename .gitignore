@@ -116,4 +116,5 @@ nbdist/
 .nb-gradle/
 
 lib/
+temp/
 # End of https://www.toptal.com/developers/gitignore/api/intellij,netbeans
