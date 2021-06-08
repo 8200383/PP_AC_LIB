@@ -243,7 +243,7 @@ public class Sensor implements ISensor {
      */
     @Override
     public IMeasurement[] getMeasurements() {
-        if (numMeasurements == 0) return new IMeasurement[]{};
+        if (numMeasurements == 0) return new IMeasurement[]{}.clone();
 
         Measurement[] copy = new Measurement[numMeasurements];
         System.arraycopy(measurements, 0, copy, 0, numMeasurements);

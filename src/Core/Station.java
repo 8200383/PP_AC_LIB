@@ -100,7 +100,7 @@ public class Station implements IStation {
 
     @Override
     public ISensor[] getSensors() {
-        if (elements == 0) return new ISensor[]{};
+        if (elements == 0) return new ISensor[]{}.clone();
 
         Sensor[] copy = new Sensor[elements];
         System.arraycopy(sensors, 0, copy, 0, elements);

@@ -152,7 +152,7 @@ public class City implements ICity, ICityStatistics {
 
     @Override
     public IStation[] getStations() {
-        if (elements == 0) return new IStation[]{};
+        if (elements == 0) return new IStation[]{}.clone();
 
         Station[] copy = new Station[elements];
         System.arraycopy(stations, 0, copy, 0, elements);
