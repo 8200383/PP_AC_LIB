@@ -1,8 +1,8 @@
-package Storage;
+package IO;
 
 import Core.Coordinates.CartesianCoordinates;
 import Core.Coordinates.GeographicCoordinates;
-import Storage.Exceptions.KeyNotFound;
+import IO.Exceptions.KeyNotFound;
 import org.json.simple.JSONObject;
 
 /*

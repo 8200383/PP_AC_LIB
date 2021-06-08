@@ -1,4 +1,4 @@
-package Storage.Exceptions;
+package IO.Exceptions;
 
 /*
  * Nome: Micael André Cunha Dias

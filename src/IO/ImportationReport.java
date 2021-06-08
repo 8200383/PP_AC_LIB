@@ -1,4 +1,4 @@
-package Storage;
+package IO;
 
 import edu.ma02.io.interfaces.IOStatistics;
 

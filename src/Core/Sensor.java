@@ -154,41 +154,82 @@ public class Sensor implements ISensor {
         measurements = copy;
     }
 
+    /**
+     * Get the {@link SensorType} of this {@link Sensor}
+     *
+     * @return Return a {@link SensorType}
+     */
     @Override
     public SensorType getType() {
         return sensorType;
     }
 
+    /**
+     * Get the {@link String id} of this {@link Sensor}
+     *
+     * @return Returns the {@link String sensorId}
+     */
     @Override
     public String getId() {
         return sensorId;
     }
 
+    /**
+     * Get the {@link Parameter} of this {@link Sensor}
+     *
+     * @return Return a {@link Parameter}
+     */
     @Override
     public Parameter getParameter() {
         return parameter;
     }
 
+    /**
+     * Get the {@link #cartesianCoordinates} of this {@link Sensor}
+     *
+     * @return Returns an interface of {@link ICartesianCoordinates}
+     */
     @Override
     public ICartesianCoordinates getCartesianCoordinates() {
         return cartesianCoordinates;
     }
 
+    /**
+     * Get the {@link #geographicCoordinates} of this {@link Sensor}
+     *
+     * @return Returns an interface of {@link IGeographicCoordinates}
+     */
     @Override
     public IGeographicCoordinates getGeographicCoordinates() {
         return geographicCoordinates;
     }
 
+    /**
+     * Add a {@link Measurement} to an array of {@link #measurements}
+     *
+     * @param value         The read value
+     * @param localDateTime The time of the capture
+     * @param u             The {@link Unit unit} of measure
+     * @return Returns true if successful otherwise return false
+     * @throws SensorException      Throws this exception if the {@link Unit unit} of measure is invalid for this kind of {@link Sensor}
+     * @throws MeasurementException Throws this exception if the {@link Measurement} already exists
+     */
     @Override
     public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
-        // TODO Considerar Mbar para lower case
-        if (parameter.getUnit() != Unit.getUnitFromString(u)) {
+        String unit = u.equals("Mbar") ? u.toLowerCase() : u;
+
+        if (parameter.getUnit() != Unit.getUnitFromString(unit)) {
             throw new SensorException("Invalid Unit of measure for this sensor");
         }
 
         return addElement(new Measurement(value, localDateTime));
     }
 
+    /**
+     * Get the number of {@link Measurement measurements} added
+     *
+     * @return The number of {@link Measurement measurements}
+     */
     @Override
     public int getNumMeasurements() {
         return numMeasurements;

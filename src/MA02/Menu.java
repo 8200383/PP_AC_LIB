@@ -10,9 +10,8 @@ import edu.ma02.core.interfaces.IStation;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IOStatistics;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 /*
@@ -71,20 +70,29 @@ public class Menu {
         }
     }
 
-    private void showAll(City city) {
+    private void showAll(City city) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
         for (IStation station : city.getStations()) {
             System.out.println(station);
+            stringBuilder.append(station);
 
             for (ISensor sensor : station.getSensors()) {
                 System.out.println(sensor);
+                stringBuilder.append(sensor);
 
                 for (IMeasurement measurement : sensor.getMeasurements()) {
                     System.out.println(measurement);
+                    stringBuilder.append(measurement);
                 }
 
                 System.out.println();
+                stringBuilder.append("\n");
             }
         }
+
+        FileOutputStream fos = new FileOutputStream("temp/dataExport.txt");
+        fos.write(stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
+        fos.close();
     }
 
     private void showMenu() {

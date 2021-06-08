@@ -1,8 +1,11 @@
 package MA02;
 
 import Core.*;
-import Storage.JsonImporter;
+import IO.JsonImporter;
+import edu.ma02.core.enumerations.AggregationOperator;
+import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
+import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
@@ -25,8 +28,13 @@ public class Main {
         JsonImporter jsonInputOutput = new JsonImporter();
         IOStatistics ioStatistics = jsonInputOutput.importData(city, "resources/sensorData.json");
 
+        //QuickChart chart = new QuickChart();
+        //chart.generateChart(ChartType.BAR, null);
+
         Menu menu = new Menu();
         menu.displayMenu(city, ioStatistics);
+
+        IStatistics[] stats = city.getMeasurementsByStation(AggregationOperator.COUNT, Parameter.O3);
     }
 
 

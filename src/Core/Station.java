@@ -3,6 +3,8 @@ package Core;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
+import edu.ma02.core.interfaces.ICartesianCoordinates;
+import edu.ma02.core.interfaces.IGeographicCoordinates;
 import edu.ma02.core.interfaces.ISensor;
 import edu.ma02.core.interfaces.IStation;
 

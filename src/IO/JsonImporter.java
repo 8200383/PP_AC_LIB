@@ -1,11 +1,12 @@
-package Storage;
+package IO;
 
-import Storage.Exceptions.KeyNotFound;
+import IO.Exceptions.KeyNotFound;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.ICity;
+import edu.ma02.io.interfaces.IExporter;
 import edu.ma02.io.interfaces.IImporter;
 import edu.ma02.io.interfaces.IOStatistics;
 import org.json.simple.JSONArray;
@@ -26,7 +27,7 @@ import java.time.format.DateTimeFormatter;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class JsonImporter implements IImporter {
+public class JsonImporter implements IImporter, IExporter {
 
     @Override
     public IOStatistics importData(ICity city, String path) throws IOException, CityException {
@@ -82,5 +83,10 @@ public class JsonImporter implements IImporter {
         }
 
         return importationReport;
+    }
+
+    @Override
+    public String export() throws IOException {
+        return null;
     }
 }
