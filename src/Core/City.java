@@ -84,16 +84,25 @@ public class City implements ICity, ICityStatistics {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getId() {
         return cityName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return cityName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addStation(String stationName) throws CityException {
         if (stationName == null) throw new CityException("Station Name can't be NULL");
@@ -112,6 +121,9 @@ public class City implements ICity, ICityStatistics {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addSensor(String stationName, String sensorId,
                              ICartesianCoordinates cartesianCoordinates,
@@ -133,6 +145,9 @@ public class City implements ICity, ICityStatistics {
         return station.addSensor(new Sensor(sensorId, cartesianCoordinates, geographicCoordinates));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addMeasurement(String stationName, String sensorId, double value,
                                   String unit, LocalDateTime localDateTime
@@ -149,6 +164,9 @@ public class City implements ICity, ICityStatistics {
         return station.addMeasurement(sensorId, value, localDateTime, unit);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStation[] getStations() {
         if (elements == 0) return new IStation[]{}.clone();
@@ -156,17 +174,26 @@ public class City implements ICity, ICityStatistics {
         return stations.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStation getStation(String stationName) {
         return findStationByName(stationName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor[] getSensorsByStation(String stationName) {
         IStation station = findStationByName(stationName);
         return (station != null) ? station.getSensors() : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IMeasurement[] getMeasurementsBySensor(String sensorId) {
         for (IStation iStation : stations) {
@@ -184,6 +211,9 @@ public class City implements ICity, ICityStatistics {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     // TODO Search a Station compatible with those parameters
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter,
@@ -195,6 +225,9 @@ public class City implements ICity, ICityStatistics {
         return new IStatistics[0];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     // TODO Start here before go up there, find a station compatible with the passed parameter
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
@@ -275,6 +308,9 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     // TODO Those are relatively simple
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator,
@@ -286,6 +322,9 @@ public class City implements ICity, ICityStatistics {
         return new IStatistics[0];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     // TODO Start here before go up there
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator
@@ -293,6 +332,9 @@ public class City implements ICity, ICityStatistics {
         return new IStatistics[0];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "City{" +

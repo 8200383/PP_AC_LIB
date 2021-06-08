@@ -69,11 +69,17 @@ public class Station implements IStation {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addSensor(ISensor sensor) throws StationException {
         if (sensor == null) {
@@ -87,6 +93,9 @@ public class Station implements IStation {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addMeasurement(String sensorId, double value, LocalDateTime date, String unit) throws StationException, SensorException, MeasurementException {
         if (sensorId == null || date == null || unit == null) {
@@ -101,6 +110,9 @@ public class Station implements IStation {
         return sensor.addMeasurement(value, date, unit);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor[] getSensors() {
         if (elements == 0) return new ISensor[]{}.clone();
@@ -108,11 +120,17 @@ public class Station implements IStation {
         return sensors.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor getSensor(String sensorId) {
         return getSensorById(sensorId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Station{" +

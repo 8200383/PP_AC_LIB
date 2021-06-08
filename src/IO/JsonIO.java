@@ -41,6 +41,9 @@ public class JsonIO implements IImporter, IExporter {
         this.statistics = statistics;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IOStatistics importData(ICity city, String path) throws IOException, CityException {
         if (city == null) throw new CityException("City can't be NULL");
@@ -98,6 +101,9 @@ public class JsonIO implements IImporter, IExporter {
         return report;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String export() throws IOException {
         FileOutputStream fos = new FileOutputStream("exportedData.json");

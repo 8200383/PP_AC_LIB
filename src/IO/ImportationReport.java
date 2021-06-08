@@ -58,36 +58,57 @@ public class ImportationReport implements IOStatistics {
         else nMeasurementsRead++;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfReadMeasurements() {
         return nMeasurementsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfNewStationsRead() {
         return nNewStationsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfStationsRead() {
         return nStationsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfSensorsRead() {
         return nSensorsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfNewSensorsRead() {
         return nNewSensorsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfNewMeasurementsRead() {
         return nNewMeasurementsRead;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getExceptions() {
         if (nCaughtExceptions == 0) return new String[]{};
