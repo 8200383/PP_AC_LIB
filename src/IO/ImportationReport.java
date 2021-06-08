@@ -23,36 +23,62 @@ public class ImportationReport implements IOStatistics {
     private String[] caughtExceptions;
     private int nCaughtExceptions = 0;
 
+    /**
+     * Constructor for {@link ImportationReport}
+     */
     public ImportationReport() {
         caughtExceptions = new String[10];
     }
 
+    /**
+     * Grow an array of {@link #caughtExceptions}
+     */
     private void grow() {
         String[] copy = new String[caughtExceptions.length * 2];
         System.arraycopy(caughtExceptions, 0, copy, 0, caughtExceptions.length);
         caughtExceptions = copy;
     }
 
+    /**
+     * Add an exception to an array of {@link #caughtExceptions}
+     *
+     * @param stackTrace The Stack Trace of the exception
+     * @param cause      The cause of the exception
+     */
     public void addException(StackTraceElement[] stackTrace, String cause) {
         if (nCaughtExceptions == caughtExceptions.length) {
             grow();
         }
 
-        String exceptionMessage = "[" + LocalDateTime.now() + "] [" + stackTrace[0].getClassName() + "] " + cause;
-
-        caughtExceptions[nCaughtExceptions++] = exceptionMessage;
+        caughtExceptions[nCaughtExceptions++] =
+                "[" + LocalDateTime.now() + "] [" + stackTrace[0].getClassName() + "] " + cause;
     }
 
+    /**
+     * Increase the number of read stations
+     *
+     * @param newRead Set to true if is a new read
+     */
     public void increaseReadStation(boolean newRead) {
         if (newRead) nNewStationsRead++;
         else nStationsRead++;
     }
 
+    /**
+     * Increase the number of read sensors
+     *
+     * @param newRead Set to true if is a new read
+     */
     public void increaseReadSensor(boolean newRead) {
         if (newRead) nNewSensorsRead++;
         else nSensorsRead++;
     }
 
+    /**
+     * Increase the number of read measurements
+     *
+     * @param newRead Set to true if is a new read
+     */
     public void increaseReadMeasurement(boolean newRead) {
         if (newRead) nNewMeasurementsRead++;
         else nMeasurementsRead++;

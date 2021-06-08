@@ -1,6 +1,5 @@
 package IO;
 
-import IO.Exceptions.KeyNotFound;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -34,9 +33,18 @@ public class JsonIO implements IImporter, IExporter {
     private int nImportsMade = 0;
     private IStatistics[] statistics;
 
+    /**
+     * Empty constructor for {@link JsonIO}
+     */
     public JsonIO() {
     }
 
+    /**
+     * Set an array of {@link IStatistics}
+     *
+     * @param statistics The array of {@link IStatistics}
+     * @implNote Call this function before {@link #export()}
+     */
     public void setStatistics(IStatistics[] statistics) {
         this.statistics = statistics;
     }
@@ -63,7 +71,7 @@ public class JsonIO implements IImporter, IExporter {
                         jsonObject.containsKey("unit");
 
                 if (!jsonOk) {
-                    throw new KeyNotFound("Invalid JsonObject");
+                    throw new IOException("Invalid JsonObject");
                 }
 
                 if (city.addStation(jsonObject.get("address").toString())) {
@@ -92,7 +100,7 @@ public class JsonIO implements IImporter, IExporter {
                 )) {
                     report.increaseReadMeasurement(nImportsMade > 0);
                 }
-            } catch (CityException | SensorException | KeyNotFound | StationException | MeasurementException e) {
+            } catch (CityException | SensorException | IOException | StationException | MeasurementException e) {
                 report.addException(e.getStackTrace(), e.getMessage());
             }
         }
@@ -108,7 +116,7 @@ public class JsonIO implements IImporter, IExporter {
     public String export() throws IOException {
         FileOutputStream fos = new FileOutputStream("exportedData.json");
 
-        // TODO Build an Object with JSONOBject provided by json-simple
+        // TODO Build an Object with JSONObject provided by json-simple
         return null;
     }
 
