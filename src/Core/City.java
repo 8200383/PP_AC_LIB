@@ -54,8 +54,12 @@ public class City implements ICity, ICityStatistics {
     private IStation findStationByName(String stationName) {
         if (stationName == null) return null;
 
-        for (IStation station : getStations()) {
-            if (stationName.equals(station.getName())) return station;
+        for (IStation iStation : stations) {
+            if (iStation instanceof Station station) {
+                if (station.getName().equals(stationName)) {
+                    return station;
+                }
+            }
         }
 
         return null;
@@ -69,8 +73,12 @@ public class City implements ICity, ICityStatistics {
      * @return Returns an instante of a {@link Sensor}
      */
     private ISensor findSensorAtStationById(IStation station, String sensorId) {
-        for (ISensor sensor : station.getSensors()) {
-            if (sensor.getId().equals(sensorId)) return sensor;
+        for (ISensor iSensor : station.getSensors()) {
+            if (iSensor instanceof Sensor sensor) {
+                if (sensor.getId().equals(sensorId)) {
+                    return sensor;
+                }
+            }
         }
 
         return null;
@@ -118,14 +126,8 @@ public class City implements ICity, ICityStatistics {
             throw new CityException("Station not found");
         }
 
-        // If caught from City returns a StationException otherwise return a SensorException
-        if (!Sensor.isSensorIdLengthValid(sensorId)) {
-            throw new StationException("[City] Sensor ID can't have more or less than 10 characters");
-        }
-
-        ISensor sensor = findSensorAtStationById(station, sensorId);
-        if (sensor != null) {
-            throw new StationException("Sensor doesn't exist");
+        if (findSensorAtStationById(station, sensorId) != null) {
+            return false;
         }
 
         return station.addSensor(new Sensor(sensorId, cartesianCoordinates, geographicCoordinates));
@@ -144,9 +146,6 @@ public class City implements ICity, ICityStatistics {
             throw new CityException("Can't find any Station with that name");
         }
 
-        /* Exceptions from Stations, Sensors and Measurement caught here
-         * This also checks if the collections stores the measurement
-         */
         return station.addMeasurement(sensorId, value, localDateTime, unit);
     }
 
@@ -154,9 +153,7 @@ public class City implements ICity, ICityStatistics {
     public IStation[] getStations() {
         if (elements == 0) return new IStation[]{}.clone();
 
-        Station[] copy = new Station[elements];
-        System.arraycopy(stations, 0, copy, 0, elements);
-        return copy.clone();
+        return stations.clone();
     }
 
     @Override
@@ -172,10 +169,14 @@ public class City implements ICity, ICityStatistics {
 
     @Override
     public IMeasurement[] getMeasurementsBySensor(String sensorId) {
-        for (IStation station : getStations()) {
-            for (ISensor sensor : station.getSensors()) {
-                if (sensor.getId().equals(sensorId)) {
-                    return sensor.getMeasurements();
+        for (IStation iStation : stations) {
+            if (iStation instanceof Station station) {
+                for (ISensor iSensor : station.getSensors()) {
+                    if (iSensor instanceof Sensor sensor) {
+                        if (sensor.getId().equals(sensorId)) {
+                            return sensor.getMeasurements();
+                        }
+                    }
                 }
             }
         }
@@ -287,7 +288,8 @@ public class City implements ICity, ICityStatistics {
 
     // TODO Start here before go up there
     @Override
-    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator, Parameter parameter) {
+    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator
+            aggregationOperator, Parameter parameter) {
         return new IStatistics[0];
     }
 

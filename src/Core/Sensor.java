@@ -120,8 +120,12 @@ public class Sensor implements ISensor {
      * @return true if a {@link Measurement} is found or false if nothing is found
      */
     private boolean exists(Measurement measurement) {
-        for (IMeasurement m : getMeasurements()) {
-            if (measurement.equals(m)) return true;
+        for (IMeasurement iMeasurement : getMeasurements()) {
+            if (iMeasurement instanceof Measurement m) {
+                if (measurement.equals(m)) {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -245,9 +249,7 @@ public class Sensor implements ISensor {
     public IMeasurement[] getMeasurements() {
         if (numMeasurements == 0) return new IMeasurement[]{}.clone();
 
-        Measurement[] copy = new Measurement[numMeasurements];
-        System.arraycopy(measurements, 0, copy, 0, numMeasurements);
-        return copy.clone();
+        return measurements.clone();
     }
 
     /**

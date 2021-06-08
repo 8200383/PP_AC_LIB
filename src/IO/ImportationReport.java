@@ -21,7 +21,7 @@ public class ImportationReport implements IOStatistics {
     private int nNewSensorsRead;
     private int nSensorsRead;
     private String[] caughtExceptions;
-    private int elements = 0;
+    private int nCaughtExceptions = 0;
 
     public ImportationReport() {
         caughtExceptions = new String[10];
@@ -34,13 +34,13 @@ public class ImportationReport implements IOStatistics {
     }
 
     public void addException(StackTraceElement[] stackTrace, String cause) {
-        if (elements == caughtExceptions.length) {
+        if (nCaughtExceptions == caughtExceptions.length) {
             grow();
         }
 
         String exceptionMessage = "[" + LocalDateTime.now() + "] [" + stackTrace[0].getClassName() + "] " + cause;
 
-        caughtExceptions[elements++] = exceptionMessage;
+        caughtExceptions[nCaughtExceptions++] = exceptionMessage;
     }
 
     public void increaseReadStation(boolean newRead) {
@@ -90,10 +90,8 @@ public class ImportationReport implements IOStatistics {
 
     @Override
     public String[] getExceptions() {
-        if (elements == 0) return new String[]{};
+        if (nCaughtExceptions == 0) return new String[]{};
 
-        String[] exceptions = new String[elements];
-        System.arraycopy(caughtExceptions, 0, exceptions, 0, elements);
-        return exceptions.clone();
+        return caughtExceptions.clone();
     }
 }

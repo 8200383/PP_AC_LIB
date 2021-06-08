@@ -1,7 +1,6 @@
 package MA02;
 
-import Core.City;
-import Core.Statistics;
+import Core.*;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.interfaces.IMeasurement;
@@ -42,7 +41,9 @@ public class Menu {
                     break;
                 case "3":
                     for (String s : ioStatistics.getExceptions()) {
-                        logger.warning(s);
+                        if (s != null) {
+                            logger.warning(s);
+                        }
                     }
                     break;
                 case "5":
@@ -62,7 +63,7 @@ public class Menu {
                                     "\nNumber of new Stations Read: " + ioStatistics.getNumberOfNewStationsRead() +
                                     "\nNumber of Sensors Read: " + ioStatistics.getNumberOfSensorsRead() +
                                     "\nNumber of new Sensors Read: " + ioStatistics.getNumberOfNewSensorsRead() +
-                                    "\nNumber of exceptions: " + ioStatistics.getExceptions().length);
+                                    "\nNumber of exceptions: ");
                     break;
                 case "0":
                     System.exit(0);
@@ -72,21 +73,27 @@ public class Menu {
 
     private void showAll(City city) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        for (IStation station : city.getStations()) {
-            System.out.println(station);
-            stringBuilder.append(station);
+        for (IStation iStation : city.getStations()) {
+            if (iStation instanceof Station station) {
+                System.out.println(station);
+                stringBuilder.append(station);
 
-            for (ISensor sensor : station.getSensors()) {
-                System.out.println(sensor);
-                stringBuilder.append(sensor);
+                for (ISensor iSensor : station.getSensors()) {
+                    if (iSensor instanceof Sensor sensor) {
+                        System.out.println(sensor);
+                        stringBuilder.append(sensor);
 
-                for (IMeasurement measurement : sensor.getMeasurements()) {
-                    System.out.println(measurement);
-                    stringBuilder.append(measurement);
+                        for (IMeasurement iMeasurement : sensor.getMeasurements()) {
+                            if (iMeasurement instanceof Measurement measurement) {
+                                System.out.println(measurement);
+                                stringBuilder.append(measurement);
+                            }
+                        }
+
+                        System.out.println();
+                        stringBuilder.append("\n");
+                    }
                 }
-
-                System.out.println();
-                stringBuilder.append("\n");
             }
         }
 
