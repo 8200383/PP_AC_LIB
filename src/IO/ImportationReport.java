@@ -43,16 +43,19 @@ public class ImportationReport implements IOStatistics {
         caughtExceptions[elements++] = exceptionMessage;
     }
 
-    public void increaseReadStation() {
-        nNewStationsRead++;
+    public void increaseReadStation(boolean newRead) {
+        if (newRead) nNewStationsRead++;
+        else nStationsRead++;
     }
 
-    public void increaseReadSensor() {
-        nNewSensorsRead++;
+    public void increaseReadSensor(boolean newRead) {
+        if (newRead) nNewSensorsRead++;
+        else nSensorsRead++;
     }
 
-    public void increaseReadMeasurement() {
-        nNewMeasurementsRead++;
+    public void increaseReadMeasurement(boolean newRead) {
+        if (newRead) nNewMeasurementsRead++;
+        else nMeasurementsRead++;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package MA02;
 
 import Core.*;
-import IO.JsonImporter;
+import IO.JsonIO;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
@@ -25,7 +25,7 @@ public class Main {
 
         City city = new City("Lisbon");
 
-        JsonImporter jsonInputOutput = new JsonImporter();
+        JsonIO jsonInputOutput = new JsonIO();
         IOStatistics ioStatistics = jsonInputOutput.importData(city, "resources/sensorData.json");
 
         //QuickChart chart = new QuickChart();
