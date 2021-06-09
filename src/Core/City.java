@@ -183,7 +183,6 @@ public class City implements ICity, ICityStatistics {
         return null;
     }
 
-    // TODO Search a Station compatible with those parameters
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter,
                                                   LocalDateTime startDate, LocalDateTime endDate) {
@@ -191,23 +190,14 @@ public class City implements ICity, ICityStatistics {
             return getMeasurementsByStation(aggregationOperator, parameter);
         }
 
-        return new IStatistics[0];
-    }
+        int statiscticsCount = 0;
+        Statistics[] statistics = new Statistics[5];
 
-    // TODO Start here before go up there, find a station compatible with the passed parameter
-    @Override
-    public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
-        // TODO Implement a switch case operator for the aggregation operator
-
-        Statistics[] statistics = new Statistics[10];
-        int elements = 0;
-
-        // Pode haver mais do que um sensor com o mesmo parameter mas noutra estação
         for (IStation station : getStations()) {
             for (ISensor sensor : station.getSensors()) {
                 if (sensor.getParameter() == parameter) {
 
-                    if (elements == statistics.length) {
+                    if (statistics.length == statiscticsCount) {
                         Statistics[] copy = new Statistics[statistics.length * 2];
                         System.arraycopy(statistics, 0, copy, 0, statistics.length);
                         statistics = copy;
@@ -215,58 +205,204 @@ public class City implements ICity, ICityStatistics {
 
                     switch (aggregationOperator) {
                         case AVG -> {
-                            double values = 0.0;
+                            int valueCount = 0;
+                            double valuesSum = 0;
 
-                            // Média de measurements por sensor
                             for (IMeasurement measurement : sensor.getMeasurements()) {
-                                values += measurement.getValue();
-
+                                if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                                    valuesSum += measurement.getValue();
+                                    valueCount++;
+                                }
                             }
 
-                            double average = sensor.getNumMeasurements() / values;
-                            statistics[elements++] = new Statistics(
+                            statistics[statiscticsCount++] = new Statistics(
                                     "Sensor=" + sensor.getId() +
                                             ", Station=" + station.getName() +
                                             ", Unit=" + sensor.getParameter().getUnit() +
-                                            ", Parameter=" + sensor.getParameter().toString(), average);
+                                            ", Parameter=" + sensor.getParameter().toString(),
+                                    valuesSum / (double) valueCount);
                         }
-                        case COUNT -> statistics[elements++] = new Statistics(
-                                "Count of Measurements By Station" +
-                                        ", Sensor=" + sensor.getId() +
-                                        ", Station=" + station.getName(), sensor.getNumMeasurements());
+                        case COUNT -> {
+                            int valueCount = 0;
+
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                                    valueCount++;
+                                }
+                            }
+
+                            statistics[statiscticsCount++] = new Statistics(
+                                    "Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName() +
+                                            ", Unit=" + sensor.getParameter().getUnit() +
+                                            ", Parameter=" + sensor.getParameter().toString(),
+                                    valueCount);
+                        }
+                        case MAX -> {
+                            //TODO: Get first value max
+                        }
+                        case MIN -> {
+                            //TODO: Get first value min
+                        }
+                    }
+                }
+            }
+        }
+        return statistics.clone();
+    }
+
+    @Override
+    public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
+
+        int statiscticsCount = 0;
+        Statistics[] statistics = new Statistics[5];
+
+        for (IStation station : getStations()) {
+            for (ISensor sensor : station.getSensors()) {
+                if (sensor.getParameter() == parameter) {
+
+                    if (statistics.length == statiscticsCount) {
+                        Statistics[] copy = new Statistics[statistics.length * 2];
+                        System.arraycopy(statistics, 0, copy, 0, statistics.length);
+                        statistics = copy;
+                    }
+
+                    switch (aggregationOperator) {
+                        case AVG -> {
+                            double valuesSum = 0;
+
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                valuesSum += measurement.getValue();
+                            }
+
+                            statistics[statiscticsCount++] = new Statistics(
+                                    "Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName() +
+                                            ", Unit=" + sensor.getParameter().getUnit() +
+                                            ", Parameter=" + sensor.getParameter().toString(),
+                                    valuesSum / (double) sensor.getNumMeasurements());
+                        }
+                        case COUNT -> statistics[statiscticsCount++] = new Statistics(
+                                "Sensor=" + sensor.getId() +
+                                        ", Station=" + station.getName() +
+                                        ", Unit=" + sensor.getParameter().getUnit() +
+                                        ", Parameter=" + sensor.getParameter().toString(),
+                                sensor.getNumMeasurements());
                         case MAX -> {
                             IMeasurement[] measurements = sensor.getMeasurements();
                             if (measurements == null) break;
 
-                            double max = measurements[0].getValue();
-                            for (IMeasurement measurement : measurements) {
-                                if (measurement.getValue() > max) {
-                                    max = measurement.getValue();
+                            double maxValue = measurements[0].getValue();
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                if (measurement.getValue() > maxValue) {
+                                    maxValue = measurement.getValue();
                                 }
                             }
 
-                            statistics[elements++] = new Statistics(
-                                    "Maximum of Measurements By Station" +
-                                            ", Sensor=" + sensor.getId() +
-                                            ", Station=" + station.getName(), max);
+                            statistics[statiscticsCount++] = new Statistics(
+                                    "Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName() +
+                                            ", Unit=" + sensor.getParameter().getUnit() +
+                                            ", Parameter=" + sensor.getParameter().toString(),
+                                    maxValue);
                         }
                         case MIN -> {
                             IMeasurement[] measurements = sensor.getMeasurements();
                             if (measurements == null) break;
 
-                            double min = measurements[0].getValue();
-                            for (IMeasurement measurement : measurements) {
-                                if (measurement.getValue() < min) {
-                                    min = measurement.getValue();
+                            double minValue = measurements[0].getValue();
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                if (measurement.getValue() < minValue) {
+                                    minValue = measurement.getValue();
                                 }
                             }
 
-                            statistics[elements++] = new Statistics(
-                                    "Minimum of Measurements By Station" +
-                                            ", Sensor=" + sensor.getId() +
-                                            ", Station=" + station.getName(), min);
+                            statistics[statiscticsCount++] = new Statistics(
+                                    "Sensor=" + sensor.getId() +
+                                            ", Station=" + station.getName() +
+                                            ", Unit=" + sensor.getParameter().getUnit() +
+                                            ", Parameter=" + sensor.getParameter().toString(),
+                                    minValue);
                         }
                     }
+                }
+            }
+        }
+        return statistics.clone();
+    }
+
+    //TODO: Documentar
+    private IStation getStationByName(String stationName) {
+        for (IStation station : getStations()) {
+            if (station.getName() == stationName) {
+                return station;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator,
+                                                 Parameter parameter, LocalDateTime startDate, LocalDateTime endDate) {
+        if (stationName == null) {
+            return new IStatistics[0];
+        }
+
+        if (startDate == null && endDate == null) {
+            return getMeasurementsBySensor(stationName, aggregationOperator, parameter);
+        }
+
+        int statiscticsCount = 0;
+        Statistics[] statistics = new Statistics[5];
+        IStation station = getStationByName(stationName);
+
+        for (ISensor sensor : station.getSensors()) {
+            if (statistics.length == statiscticsCount) {
+                Statistics[] copy = new Statistics[statistics.length * 2];
+                System.arraycopy(statistics, 0, copy, 0, statistics.length);
+                statistics = copy;
+            }
+
+            switch (aggregationOperator) {
+                case AVG -> {
+                    int valueCount = 0;
+                    double valuesSum = 0;
+
+                    for (IMeasurement measurement : sensor.getMeasurements()) {
+                        if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                            valuesSum += measurement.getValue();
+                            valueCount++;
+                        }
+                    }
+
+                    statistics[statiscticsCount++] = new Statistics(
+                            "Sensor=" + sensor.getId() +
+                                    ", Station=" + station.getName() +
+                                    ", Unit=" + sensor.getParameter().getUnit() +
+                                    ", Parameter=" + sensor.getParameter().toString(),
+                            valuesSum / (double) valueCount);
+                }
+                case COUNT -> {
+                    int valueCount = 0;
+
+                    for (IMeasurement measurement : sensor.getMeasurements()) {
+                        if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                            valueCount++;
+                        }
+                    }
+
+                    statistics[statiscticsCount++] = new Statistics(
+                            "Sensor=" + sensor.getId() +
+                                    ", Station=" + station.getName() +
+                                    ", Unit=" + sensor.getParameter().getUnit() +
+                                    ", Parameter=" + sensor.getParameter().toString(),
+                            valueCount);
+                }
+                case MAX -> {
+                    //TODO: Get first value max
+                }
+                case MIN -> {
+                    //TODO: Get first value min
                 }
             }
         }
@@ -274,21 +410,83 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
-    // TODO Those are relatively simple
-    @Override
-    public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator,
-                                                 Parameter parameter, LocalDateTime startDate, LocalDateTime endDate) {
-        if (startDate == null && endDate == null) {
-            return getMeasurementsBySensor(stationName, aggregationOperator, parameter);
-        }
-
-        return new IStatistics[0];
-    }
-
-    // TODO Start here before go up there
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator, Parameter parameter) {
-        return new IStatistics[0];
+        if (stationName == null) {
+            return new IStatistics[0];
+        }
+
+        int statiscticsCount = 0;
+        Statistics[] statistics = new Statistics[5];
+        IStation station = getStationByName(stationName);
+
+        for (ISensor sensor : station.getSensors()) {
+            if (statistics.length == statiscticsCount) {
+                Statistics[] copy = new Statistics[statistics.length * 2];
+                System.arraycopy(statistics, 0, copy, 0, statistics.length);
+                statistics = copy;
+            }
+
+            switch (aggregationOperator) {
+                case AVG -> {
+                    double valuesSum = 0;
+
+                    for (IMeasurement measurement : sensor.getMeasurements()) {
+                        valuesSum += measurement.getValue();
+                    }
+
+                    statistics[statiscticsCount++] = new Statistics(
+                            "Sensor=" + sensor.getId() +
+                                    ", Station=" + station.getName() +
+                                    ", Unit=" + sensor.getParameter().getUnit() +
+                                    ", Parameter=" + sensor.getParameter().toString(),
+                            valuesSum / (double) sensor.getNumMeasurements());
+                }
+                case COUNT -> statistics[statiscticsCount++] = new Statistics(
+                        "Sensor=" + sensor.getId() +
+                                ", Station=" + station.getName() +
+                                ", Unit=" + sensor.getParameter().getUnit() +
+                                ", Parameter=" + sensor.getParameter().toString(),
+                        sensor.getNumMeasurements());
+                case MAX -> {
+                    IMeasurement[] measurements = sensor.getMeasurements();
+                    if (measurements == null) break;
+
+                    double maxValue = measurements[0].getValue();
+                    for (IMeasurement measurement : sensor.getMeasurements()) {
+                        if (measurement.getValue() > maxValue) {
+                            maxValue = measurement.getValue();
+                        }
+                    }
+
+                    statistics[statiscticsCount++] = new Statistics(
+                            "Sensor=" + sensor.getId() +
+                                    ", Station=" + station.getName() +
+                                    ", Unit=" + sensor.getParameter().getUnit() +
+                                    ", Parameter=" + sensor.getParameter().toString(),
+                            maxValue);
+                }
+                case MIN -> {
+                    IMeasurement[] measurements = sensor.getMeasurements();
+                    if (measurements == null) break;
+
+                    double minValue = measurements[0].getValue();
+                    for (IMeasurement measurement : sensor.getMeasurements()) {
+                        if (measurement.getValue() < minValue) {
+                            minValue = measurement.getValue();
+                        }
+                    }
+
+                    statistics[statiscticsCount++] = new Statistics(
+                            "Sensor=" + sensor.getId() +
+                                    ", Station=" + station.getName() +
+                                    ", Unit=" + sensor.getParameter().getUnit() +
+                                    ", Parameter=" + sensor.getParameter().toString(),
+                            minValue);
+                }
+            }
+        }
+        return statistics.clone();
     }
 
     @Override
