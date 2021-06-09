@@ -1,5 +1,7 @@
 package IO;
 
+import Quickchart.ChartType;
+import Quickchart.QuickChart;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
@@ -13,7 +15,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,25 +29,14 @@ import java.time.format.DateTimeFormatter;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class JsonIO implements IImporter, IExporter {
+public class JsonImporter implements IImporter {
 
     private int nImportsMade = 0;
-    private IStatistics[] statistics;
 
     /**
-     * Empty constructor for {@link JsonIO}
+     * Empty constructor for {@link JsonImporter}
      */
-    public JsonIO() {
-    }
-
-    /**
-     * Set an array of {@link IStatistics}
-     *
-     * @param statistics The array of {@link IStatistics}
-     * @implNote Call this function before {@link #export()}
-     */
-    public void setStatistics(IStatistics[] statistics) {
-        this.statistics = statistics;
+    public JsonImporter() {
     }
 
     /**
@@ -108,16 +98,4 @@ public class JsonIO implements IImporter, IExporter {
         nImportsMade++;
         return report;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String export() throws IOException {
-        FileOutputStream fos = new FileOutputStream("exportedData.json");
-
-        // TODO Build an Object with JSONObject provided by json-simple
-        return null;
-    }
-
 }
