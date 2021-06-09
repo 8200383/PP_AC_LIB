@@ -102,7 +102,7 @@ public class Sensor implements ISensor {
      * @param sensorId   The {@link String sensorId} to validate
      * @param sensorType The previous identified {@link SensorType sensorType}
      * @return Returns a {@link Parameter} if the parameter is successful identified or null if no parameter was found
-     * @implNote Call this method after call {@link #identifySensorType(String sensorId)}  }
+     * @implNote Call this method after call {@link #identifySensorType(String sensorId)}
      */
     // TODO Um Sensor pode ter mais do que um parameter
     private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {

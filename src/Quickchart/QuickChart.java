@@ -1,13 +1,10 @@
 package Quickchart;
 
-import edu.ma02.dashboards.Dashboard;
-import edu.ma02.io.interfaces.IOStatistics;
+import edu.ma02.core.interfaces.IStatistics;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
-
-/*S
+/*
  * Nome: Micael André Cunha Dias
  * Número: 8200383
  * Turma: LEI1T4
@@ -18,11 +15,18 @@ import java.io.IOException;
  */
 public class QuickChart {
 
-    public QuickChart() {
+    /**
+     * Generate a chart configuration object
+     *
+     * @param chartType  The {@link ChartType type} of the chart
+     * @param statistics The {@link IStatistics data} to process
+     * @return Returns the configuration of the chart
+     */
+    public static JSONObject generateChartConfiguration(ChartType chartType, IStatistics[] statistics) {
+        if (chartType == null || statistics == null) {
+            throw new IllegalArgumentException("This method doesn't support null parameters");
+        }
 
-    }
-
-    public void generateChart(ChartType chartType, IOStatistics[] statistics) throws IOException {
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put("type", chartType.toString());
@@ -44,9 +48,7 @@ public class QuickChart {
         dataObject.put("datasets", dataSetsArray);
         jsonObject.put("data", dataObject);
 
-        String[] demo = new String[1];
-        demo[0] = jsonObject.toJSONString();
-        Dashboard.render(demo);
+        return jsonObject;
     }
 
 }
