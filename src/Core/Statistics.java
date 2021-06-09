@@ -21,11 +21,17 @@ public class Statistics implements IStatistics {
         this.value = value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return description;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getValue() {
         return value;

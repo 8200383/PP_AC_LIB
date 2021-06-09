@@ -102,7 +102,7 @@ public class Sensor implements ISensor {
      * @param sensorId   The {@link String sensorId} to validate
      * @param sensorType The previous identified {@link SensorType sensorType}
      * @return Returns a {@link Parameter} if the parameter is successful identified or null if no parameter was found
-     * @implNote Call this method after call {@link #identifySensorType(String sensorId)}  }
+     * @implNote Call this method after call {@link #identifySensorType(String sensorId)}
      */
     // TODO Um Sensor pode ter mais do que um parameter
     private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {
@@ -120,8 +120,12 @@ public class Sensor implements ISensor {
      * @return true if a {@link Measurement} is found or false if nothing is found
      */
     private boolean exists(Measurement measurement) {
-        for (IMeasurement m : getMeasurements()) {
-            if (measurement.equals(m)) return true;
+        for (IMeasurement iMeasurement : getMeasurements()) {
+            if (iMeasurement instanceof Measurement m) {
+                if (measurement.equals(m)) {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -155,9 +159,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Get the {@link SensorType} of this {@link Sensor}
-     *
-     * @return Return a {@link SensorType}
+     * {@inheritDoc}
      */
     @Override
     public SensorType getType() {
@@ -165,9 +167,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Get the {@link String id} of this {@link Sensor}
-     *
-     * @return Returns the {@link String sensorId}
+     * {@inheritDoc}
      */
     @Override
     public String getId() {
@@ -175,9 +175,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Get the {@link Parameter} of this {@link Sensor}
-     *
-     * @return Return a {@link Parameter}
+     * {@inheritDoc}
      */
     @Override
     public Parameter getParameter() {
@@ -185,9 +183,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Get the {@link #cartesianCoordinates} of this {@link Sensor}
-     *
-     * @return Returns an interface of {@link ICartesianCoordinates}
+     * {@inheritDoc}
      */
     @Override
     public ICartesianCoordinates getCartesianCoordinates() {
@@ -195,9 +191,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Get the {@link #geographicCoordinates} of this {@link Sensor}
-     *
-     * @return Returns an interface of {@link IGeographicCoordinates}
+     * {@inheritDoc}
      */
     @Override
     public IGeographicCoordinates getGeographicCoordinates() {
@@ -205,14 +199,7 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Add a {@link Measurement} to an array of {@link #measurements}
-     *
-     * @param value         The read value
-     * @param localDateTime The time of the capture
-     * @param u             The {@link Unit unit} of measure
-     * @return Returns true if successful otherwise return false
-     * @throws SensorException      Throws this exception if the {@link Unit unit} of measure is invalid for this kind of {@link Sensor}
-     * @throws MeasurementException Throws this exception if the {@link Measurement} already exists
+     * {@inheritDoc}
      */
     @Override
     public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
@@ -225,10 +212,9 @@ public class Sensor implements ISensor {
         return addElement(new Measurement(value, localDateTime));
     }
 
+
     /**
-     * Get the number of {@link Measurement measurements} added
-     *
-     * @return The number of {@link Measurement measurements}
+     * {@inheritDoc}
      */
     @Override
     public int getNumMeasurements() {
@@ -236,25 +222,17 @@ public class Sensor implements ISensor {
     }
 
     /**
-     * Return a copy of the existing {@link #measurements}
-     *
-     * @return A trimmed clone of {@link #measurements}
-     * @apiNote Use this function to prevent null checks
+     * {@inheritDoc}
      */
     @Override
     public IMeasurement[] getMeasurements() {
-        if (numMeasurements == 0) return new IMeasurement[]{};
+        if (numMeasurements == 0) return new IMeasurement[]{}.clone();
 
-        Measurement[] copy = new Measurement[numMeasurements];
-        System.arraycopy(measurements, 0, copy, 0, numMeasurements);
-        return copy.clone();
+        return measurements.clone();
     }
 
     /**
-     * Compare {@link Sensor} by {@link #sensorId}
-     *
-     * @param o The {@link Object object} to compare
-     * @return Return true if {@link #sensorId} is equals in both classes
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(Object o) {
@@ -264,6 +242,9 @@ public class Sensor implements ISensor {
         return sensorId.equals(sensor.sensorId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Sensor{" +

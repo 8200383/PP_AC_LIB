@@ -27,16 +27,25 @@ public class GeographicCoordinates implements IGeographicCoordinates {
         longitude = lng;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "GeographicCoordinates{" +

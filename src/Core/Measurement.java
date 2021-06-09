@@ -42,6 +42,7 @@ public class Measurement implements IMeasurement {
 
     /**
      * Validate bounds for the measurement
+     *
      * @param val The read value
      * @return Return if the {@link Double val} is valid
      */
@@ -49,16 +50,25 @@ public class Measurement implements IMeasurement {
         return val != -99;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LocalDateTime getTime() {
         return localDateTime;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getValue() {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -67,6 +77,9 @@ public class Measurement implements IMeasurement {
         return m.localDateTime == this.localDateTime && m.value == this.value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Measurement{" +

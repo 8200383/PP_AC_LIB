@@ -9,9 +9,16 @@ package Quickchart;
  * Número: 8200590
  * Turma: LEI1T3
  */
+
+/**
+ * Enumeration for Chart Types
+ */
 public enum ChartType {
     LINE, BAR;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         switch (this) {

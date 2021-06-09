@@ -3,8 +3,6 @@ package Core;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
-import edu.ma02.core.interfaces.ICartesianCoordinates;
-import edu.ma02.core.interfaces.IGeographicCoordinates;
 import edu.ma02.core.interfaces.ISensor;
 import edu.ma02.core.interfaces.IStation;
 
@@ -40,13 +38,23 @@ public class Station implements IStation {
     private boolean exists(Sensor sensor) {
         if (sensor == null) return false;
 
-        for (ISensor s : getSensors()) {
-            if (s.equals(sensor)) {
+        for (int i = 0; i < elements; i++) {
+            if (sensors[i].equals(sensor)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private ISensor getSensorById(String sensorId) {
+        for (int i = 0; i < elements; i++) {
+            if (sensors[i].getId().equals(sensorId)) {
+                return sensors[i];
+            }
+        }
+
+        return null;
     }
 
     private boolean addElement(Sensor sensor) {
@@ -61,61 +69,68 @@ public class Station implements IStation {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean addSensor(ISensor sensor) throws StationException, SensorException {
+    public boolean addSensor(ISensor sensor) throws StationException {
         if (sensor == null) {
             throw new StationException("Sensor Interface can't NULL");
         }
 
         if (sensor instanceof Sensor s) {
-            if (!Sensor.isSensorIdLengthValid(s.getId())) {
-                throw new SensorException("[Station] Sensor ID can't have more or less than 10 characters");
-            }
-
             return addElement(s);
         }
 
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addMeasurement(String sensorId, double value, LocalDateTime date, String unit) throws StationException, SensorException, MeasurementException {
         if (sensorId == null || date == null || unit == null) {
             throw new StationException("Parameters can't be NULL");
         }
 
-        for (ISensor sensor : getSensors()) {
-            if (sensor.getId().equals(sensorId)) {
-                return sensor.addMeasurement(value, date, unit);
-            }
+        ISensor sensor = getSensorById(sensorId);
+        if (sensor == null) {
+            throw new StationException("Sensor doesn't exists");
         }
 
-        return false;
+        return sensor.addMeasurement(value, date, unit);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor[] getSensors() {
-        if (elements == 0) return new ISensor[]{};
+        if (elements == 0) return new ISensor[]{}.clone();
 
-        Sensor[] copy = new Sensor[elements];
-        System.arraycopy(sensors, 0, copy, 0, elements);
-        return copy.clone();
+        return sensors.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor getSensor(String sensorId) {
-        for (ISensor sensor : getSensors()) {
-            if (sensor.getId().equals(sensorId)) return sensor;
-        }
-
-        return null;
+        return getSensorById(sensorId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Station{" +

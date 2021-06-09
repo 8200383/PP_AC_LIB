@@ -1,11 +1,13 @@
 package IO;
 
-import IO.Exceptions.KeyNotFound;
+import Quickchart.ChartType;
+import Quickchart.QuickChart;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.ICity;
+import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IExporter;
 import edu.ma02.io.interfaces.IImporter;
 import edu.ma02.io.interfaces.IOStatistics;
@@ -27,13 +29,24 @@ import java.time.format.DateTimeFormatter;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class JsonImporter implements IImporter, IExporter {
+public class JsonImporter implements IImporter {
 
+    private int nImportsMade = 0;
+
+    /**
+     * Empty constructor for {@link JsonImporter}
+     */
+    public JsonImporter() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IOStatistics importData(ICity city, String path) throws IOException, CityException {
         if (city == null) throw new CityException("City can't be NULL");
 
-        ImportationReport importationReport = new ImportationReport();
+        ImportationReport report = new ImportationReport();
 
         JSONArray jsonArray = (JSONArray) JSONValue.parse(new FileReader(path));
         for (Object o : jsonArray) {
@@ -48,11 +61,11 @@ public class JsonImporter implements IImporter, IExporter {
                         jsonObject.containsKey("unit");
 
                 if (!jsonOk) {
-                    throw new KeyNotFound("Invalid JsonObject");
+                    throw new IOException("Invalid JsonObject");
                 }
 
                 if (city.addStation(jsonObject.get("address").toString())) {
-                    importationReport.increaseReadStation();
+                    report.increaseReadStation(nImportsMade > 0);
                 }
 
                 CoordinatesObject coordinatesObject = new CoordinatesObject((JSONObject) jsonObject.get("coordinates"));
@@ -62,7 +75,7 @@ public class JsonImporter implements IImporter, IExporter {
                         coordinatesObject.getCartesianCoordinates(),
                         coordinatesObject.getGeographicCoordinates()
                 )) {
-                    importationReport.increaseReadSensor();
+                    report.increaseReadSensor(nImportsMade > 0);
                 }
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
@@ -75,18 +88,14 @@ public class JsonImporter implements IImporter, IExporter {
                         jsonObject.get("unit").toString(),
                         dateTime
                 )) {
-                    importationReport.increaseReadMeasurement();
+                    report.increaseReadMeasurement(nImportsMade > 0);
                 }
-            } catch (CityException | SensorException | KeyNotFound | StationException | MeasurementException e) {
-                importationReport.addException(e.getStackTrace(), e.getMessage());
+            } catch (CityException | SensorException | IOException | StationException | MeasurementException e) {
+                report.addException(e.getStackTrace(), e.getMessage());
             }
         }
 
-        return importationReport;
-    }
-
-    @Override
-    public String export() throws IOException {
-        return null;
+        nImportsMade++;
+        return report;
     }
 }

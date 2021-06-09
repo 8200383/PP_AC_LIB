@@ -2,8 +2,11 @@ package IO;
 
 import Core.Coordinates.CartesianCoordinates;
 import Core.Coordinates.GeographicCoordinates;
-import IO.Exceptions.KeyNotFound;
+import edu.ma02.core.interfaces.ICartesianCoordinates;
+import edu.ma02.core.interfaces.IGeographicCoordinates;
 import org.json.simple.JSONObject;
+
+import java.io.IOException;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -18,7 +21,13 @@ public class CoordinatesObject {
     private final GeographicCoordinates geographicCoordinates;
     private final CartesianCoordinates cartesianCoordinates;
 
-    public CoordinatesObject(JSONObject coordinates) throws KeyNotFound {
+    /**
+     * Constructor to parse the coordinates object
+     *
+     * @param coordinates The {@link JSONObject coordinates}
+     * @throws IOException Throws this exception if the object is invalid
+     */
+    public CoordinatesObject(JSONObject coordinates) throws IOException {
         boolean coordinatesOk = coordinates.containsKey("lat") &&
                 coordinates.containsKey("lng") &&
                 coordinates.containsKey("x") &&
@@ -26,7 +35,7 @@ public class CoordinatesObject {
                 coordinates.containsKey("z");
 
         if (!coordinatesOk) {
-            throw new KeyNotFound("Invalid Coordinates JsonObject");
+            throw new IOException("Invalid Coordinates JsonObject");
         }
 
         geographicCoordinates = new GeographicCoordinates(
@@ -41,12 +50,21 @@ public class CoordinatesObject {
         );
     }
 
-
-    public GeographicCoordinates getGeographicCoordinates() {
+    /**
+     * Get the parsed {@link GeographicCoordinates}
+     *
+     * @return Return an instance of {@link IGeographicCoordinates}
+     */
+    public IGeographicCoordinates getGeographicCoordinates() {
         return geographicCoordinates;
     }
 
-    public CartesianCoordinates getCartesianCoordinates() {
+    /**
+     * Get the parsed {@link CartesianCoordinates}
+     *
+     * @return Return an instance of {@link ICartesianCoordinates}
+     */
+    public ICartesianCoordinates getCartesianCoordinates() {
         return cartesianCoordinates;
     }
 }

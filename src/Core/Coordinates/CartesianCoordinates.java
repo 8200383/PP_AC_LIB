@@ -29,21 +29,33 @@ public class CartesianCoordinates implements ICartesianCoordinates {
         zAxis = z;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getX() {
         return xAxis;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getY() {
         return yAxis;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getZ() {
         return zAxis;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "CartesianCoordinates{" +
