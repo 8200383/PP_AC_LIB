@@ -10,6 +10,7 @@ import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -32,14 +33,27 @@ public class Main {
         //QuickChart chart = new QuickChart();
         //chart.generateChart(ChartType.BAR, null);
 
-        Menu menu = new Menu();
-        menu.displayMenu(city, ioStatistics);
+        //Menu menu = new Menu();
+        //menu.displayMenu(city, ioStatistics);
 
         //IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
         //Arrays.stream(measurementsByStation).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
 
-        //IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
-        //Arrays.stream(measurementsBySensor).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
+        IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
+        System.out.println(measurementsBySensor.length);
+        Arrays.stream(measurementsBySensor).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
+        System.out.println("------------");
+        IStatistics[] measurementsBySensor1 = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.MAX, Parameter.LAEQ);
+        System.out.println(measurementsBySensor1.length);
+        Arrays.stream(measurementsBySensor1).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
+        System.out.println("------------");
+        IStatistics[] measurementsBySensor2 = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.MIN, Parameter.LAEQ);
+        System.out.println(measurementsBySensor2.length);
+        Arrays.stream(measurementsBySensor2).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
+        System.out.println("------------");
+        IStatistics[] measurementsBySensor3 = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.COUNT, Parameter.LAEQ);
+        System.out.println(measurementsBySensor3.length);
+        Arrays.stream(measurementsBySensor3).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
     }
 
 

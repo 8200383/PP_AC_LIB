@@ -460,82 +460,133 @@ public class City implements ICity, ICityStatistics {
      */
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator, Parameter parameter) {
-        if (stationName == null) {
-            return new IStatistics[0];
+        if (stationName == null || aggregationOperator == null || parameter == null) {
+            throw new IllegalArgumentException("None of the method parameters can be null");
         }
 
-        IStatistics[] statistics = new IStatistics[]{};
         IStation station = getStationByName(stationName);
+        if (station == null) {
+            return new IStatistics[]{}.clone();
+        }
 
+        ISensor[] compatibleSensors = new ISensor[station.getSensors().length];
+        int sensorCounter = 0;
         for (ISensor iSensor : station.getSensors()) {
             if (iSensor instanceof Sensor sensor) {
-
-                switch (aggregationOperator) {
-                    case AVG -> {
-                        double valuesSum = 0;
-
-                        for (IMeasurement iMeasurement : sensor.getMeasurements()) {
-                            if (iMeasurement instanceof Measurement measurement) {
-                                valuesSum += measurement.getValue();
-                            }
-                        }
-
-                        statistics = addStatistic(statistics, new Statistic(
-                                sensor.getId(),
-                                station.getName(),
-                                sensor.getParameter().getUnit().toString(),
-                                sensor.getParameter().toString(),
-                                valuesSum / (double) sensor.getNumMeasurements()));
-                    }
-                    case COUNT -> statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(),
-                            station.getName(),
-                            sensor.getParameter().getUnit().toString(),
-                            sensor.getParameter().toString(),
-                            sensor.getNumMeasurements()));
-                    case MAX -> {
-                        IMeasurement[] measurements = sensor.getMeasurements();
-                        if (measurements == null) break;
-
-                        double maxValue = measurements[0].getValue(); // TODO Posição 0 pode ser null...
-                        for (IMeasurement iMeasurement : sensor.getMeasurements()) {
-                            if (iMeasurement instanceof Measurement measurement) {
-                                if (measurement.getValue() > maxValue) {
-                                    maxValue = measurement.getValue();
-                                }
-                            }
-                        }
-
-                        statistics = addStatistic(statistics, new Statistic(
-                                sensor.getId(),
-                                station.getName(),
-                                sensor.getParameter().getUnit().toString(),
-                                sensor.getParameter().toString(),
-                                maxValue));
-                    }
-                    case MIN -> {
-                        IMeasurement[] measurements = sensor.getMeasurements();
-                        if (measurements == null) break;
-
-                        double minValue = measurements[0].getValue();
-                        for (IMeasurement iMeasurement : sensor.getMeasurements()) {
-                            if (iMeasurement instanceof Measurement measurement) {
-                                if (measurement.getValue() < minValue) {
-                                    minValue = measurement.getValue();
-                                }
-                            }
-                        }
-
-                        statistics = addStatistic(statistics, new Statistic(
-                                sensor.getId(),
-                                station.getName(),
-                                sensor.getParameter().getUnit().toString(),
-                                sensor.getParameter().toString(),
-                                minValue));
-                    }
+                if (sensor.getParameter().equals(parameter)) {
+                    compatibleSensors[sensorCounter++] = sensor;
                 }
             }
         }
+
+        switch (aggregationOperator) {
+            case AVG -> {
+                return avgMeasurementBySensor(compatibleSensors);
+            }
+            case MIN -> {
+                return minMeasurementBySensor(compatibleSensors);
+            }
+            case MAX -> {
+                return maxMeasurementsBySensor(compatibleSensors);
+            }
+            case COUNT -> {
+                return countMeasurementsBySensor(compatibleSensors);
+            }
+        }
+
+        return new IStatistics[]{}.clone();
+    }
+
+    private IStatistics[] avgMeasurementBySensor(ISensor[] sensors) {
+        IStatistics[] statistics = new IStatistics[]{};
+
+        for (ISensor iSensor : sensors) {
+            if (iSensor instanceof Sensor sensor) {
+                double valuesSum = 0;
+
+                for (IMeasurement iMeasurement : sensor.getMeasurements()) {
+                    if (iMeasurement instanceof Measurement measurement) {
+                        valuesSum += measurement.getValue();
+                    }
+                }
+
+                statistics = addStatistic(statistics, new Statistic(
+                        sensor.getId(), null, null, null,
+                        valuesSum / (double) sensor.getNumMeasurements()));
+            }
+        }
+
+        return statistics.clone();
+    }
+
+    private IStatistics[] minMeasurementBySensor(ISensor[] sensors) {
+        IStatistics[] statistics = new IStatistics[]{};
+
+        for (ISensor iSensor : sensors) {
+            if (iSensor instanceof Sensor sensor) {
+
+                if (sensor.getNumMeasurements() == 0) {
+                    break;
+                }
+
+                IMeasurement[] measurements = sensor.getMeasurements();
+
+                double minValue = measurements[0].getValue(); // TODO Posição 0 pode ser null...
+                for (IMeasurement iMeasurement : sensor.getMeasurements()) {
+                    if (iMeasurement instanceof Measurement measurement) {
+                        if (measurement.getValue() < minValue) {
+                            minValue = measurement.getValue();
+                        }
+                    }
+                }
+
+                statistics = addStatistic(statistics, new Statistic(
+                        sensor.getId(), null, null, null, minValue));
+            }
+        }
+
+        return statistics.clone();
+    }
+
+    private IStatistics[] maxMeasurementsBySensor(ISensor[] sensors) {
+        IStatistics[] statistics = new IStatistics[]{};
+
+        for (ISensor iSensor : sensors) {
+            if (iSensor instanceof Sensor sensor) {
+                if (sensor.getNumMeasurements() == 0) {
+                    break;
+                }
+
+                IMeasurement[] measurements = sensor.getMeasurements();
+
+                double maxValue = measurements[0].getValue(); // TODO Posição 0 pode ser null...
+                for (IMeasurement iMeasurement : sensor.getMeasurements()) {
+                    if (iMeasurement instanceof Measurement measurement) {
+                        if (measurement.getValue() > maxValue) {
+                            maxValue = measurement.getValue();
+                        }
+                    }
+                }
+
+                statistics = addStatistic(statistics, new Statistic(
+                        sensor.getId(), null, null, null, maxValue));
+            }
+        }
+
+        return statistics.clone();
+    }
+
+    private IStatistics[] countMeasurementsBySensor(ISensor[] sensors) {
+        IStatistics[] statistics = new IStatistics[]{};
+
+        for (ISensor iSensor : sensors) {
+            if (iSensor instanceof Sensor sensor) {
+                statistics = addStatistic(statistics, new Statistic(
+                        sensor.getId(), null, null, null,
+                        sensor.getNumMeasurements()));
+            }
+        }
+
         return statistics.clone();
     }
 
