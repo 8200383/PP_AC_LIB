@@ -50,8 +50,8 @@ public class Menu {
                     showAggregationOperatorOptions();
                     IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
                     for (IStatistics iStatistics : measurementsByStation) {
-                        if (iStatistics instanceof Statistics statistics) {
-                            logger.info(statistics.getValue() + " " + statistics.getDescription());
+                        if (iStatistics instanceof Statistic statistic) {
+                            logger.info(statistic.getValue() + " " + statistic.getDescription());
                         }
                     }
                     break;

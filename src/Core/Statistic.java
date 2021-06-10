@@ -11,13 +11,17 @@ import edu.ma02.core.interfaces.IStatistics;
  * Número: 8200590
  * Turma: LEI1T3
  */
-public class Statistics implements IStatistics {
+public class Statistic implements IStatistics {
 
     String description;
     double value;
 
-    public Statistics(String description, double value) {
-        this.description = description;
+    public Statistic(String sensorId, String stationName, String sensorParameter, String sensorUnit, double value) {
+        this.description = "Sensor=" + sensorId +
+                ", Station=" + stationName +
+                ", Unit=" + sensorUnit +
+                ", Parameter=" + sensorParameter;
+
         this.value = value;
     }
 

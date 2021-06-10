@@ -9,6 +9,7 @@ import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -31,10 +32,14 @@ public class Main {
         //QuickChart chart = new QuickChart();
         //chart.generateChart(ChartType.BAR, null);
 
-        Menu menu = new Menu();
-        menu.displayMenu(city, ioStatistics);
+        //Menu menu = new Menu();
+        //menu.displayMenu(city, ioStatistics);
 
-        IStatistics[] stats = city.getMeasurementsByStation(AggregationOperator.COUNT, Parameter.O3);
+        IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
+        Arrays.stream(measurementsByStation).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
+
+        IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
+        Arrays.stream(measurementsBySensor).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
     }
 
 
