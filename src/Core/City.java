@@ -93,21 +93,30 @@ public class City implements ICity, ICityStatistics {
         return destArray;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getId() {
         return cityName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return cityName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addStation(String stationName) throws CityException {
         if (stationName == null) throw new CityException("Station Name can't be NULL");
 
-        // Check if Station already exists by it's name
+        // Check if Station already exists
         if (getStationByName(stationName) != null) {
             return false;
         }
@@ -121,6 +130,9 @@ public class City implements ICity, ICityStatistics {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addSensor(String stationName, String sensorId,
                              ICartesianCoordinates cartesianCoordinates,
@@ -148,6 +160,9 @@ public class City implements ICity, ICityStatistics {
         return station.addSensor(new Sensor(sensorId, cartesianCoordinates, geographicCoordinates));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addMeasurement(String stationName, String sensorId, double value,
                                   String unit, LocalDateTime localDateTime
@@ -167,6 +182,9 @@ public class City implements ICity, ICityStatistics {
         return station.addMeasurement(sensorId, value, localDateTime, unit);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStation[] getStations() {
         if (elements == 0) return new IStation[]{};
@@ -176,17 +194,26 @@ public class City implements ICity, ICityStatistics {
         return copy.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStation getStation(String stationName) {
         return getStationByName(stationName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISensor[] getSensorsByStation(String stationName) {
         IStation station = getStationByName(stationName);
         return (station != null) ? station.getSensors() : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IMeasurement[] getMeasurementsBySensor(String sensorId) {
         for (IStation iStation : stations) {
@@ -204,6 +231,9 @@ public class City implements ICity, ICityStatistics {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter,
                                                   LocalDateTime startDate, LocalDateTime endDate) {
@@ -273,6 +303,9 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
 
@@ -352,6 +385,9 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator,
                                                  Parameter parameter, LocalDateTime startDate, LocalDateTime endDate) {
@@ -419,6 +455,9 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IStatistics[] getMeasurementsBySensor(String stationName, AggregationOperator aggregationOperator, Parameter parameter) {
         if (stationName == null) {
@@ -500,6 +539,9 @@ public class City implements ICity, ICityStatistics {
         return statistics.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "City{" +

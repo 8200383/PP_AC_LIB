@@ -71,35 +71,26 @@ public class Menu {
         }
     }
 
-    private void showAll(City city) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
+    private void showAll(City city) {
         for (IStation iStation : city.getStations()) {
             if (iStation instanceof Station station) {
                 System.out.println(station);
-                stringBuilder.append(station);
 
                 for (ISensor iSensor : station.getSensors()) {
                     if (iSensor instanceof Sensor sensor) {
                         System.out.println(sensor);
-                        stringBuilder.append(sensor);
 
                         for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                             if (iMeasurement instanceof Measurement measurement) {
                                 System.out.println(measurement);
-                                stringBuilder.append(measurement);
                             }
                         }
 
                         System.out.println();
-                        stringBuilder.append("\n");
                     }
                 }
             }
         }
-
-        FileOutputStream fos = new FileOutputStream("temp/dataExport.txt");
-        fos.write(stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
-        fos.close();
     }
 
     private void showMenu() {

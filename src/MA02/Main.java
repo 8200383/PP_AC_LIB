@@ -32,14 +32,14 @@ public class Main {
         //QuickChart chart = new QuickChart();
         //chart.generateChart(ChartType.BAR, null);
 
-        //Menu menu = new Menu();
-        //menu.displayMenu(city, ioStatistics);
+        Menu menu = new Menu();
+        menu.displayMenu(city, ioStatistics);
 
-        IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
-        Arrays.stream(measurementsByStation).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
+        //IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
+        //Arrays.stream(measurementsByStation).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
 
-        IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
-        Arrays.stream(measurementsBySensor).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
+        //IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
+        //Arrays.stream(measurementsBySensor).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
     }
 
 
