@@ -276,8 +276,7 @@ public class City implements ICity, ICityStatistics {
                             for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                                 if (iMeasurement instanceof Measurement measurement) {
                                     if (measurement.getTime().compareTo(startDate) > 0 &&
-                                            measurement.getTime().compareTo(endDate) < 0
-                                    ) {
+                                            measurement.getTime().compareTo(endDate) < 0) {
                                         valueCount++;
                                     }
                                 }
@@ -291,10 +290,48 @@ public class City implements ICity, ICityStatistics {
                                     valueCount));
                         }
                         case MAX -> {
-                            //TODO: Get first value max
+                            IMeasurement[] measurementArray = sensor.getMeasurements();
+                            if (measurementArray == null) break;
+
+                            measurementArray = getMeasurementsWithinDates(measurementArray, startDate, endDate);
+                            if (measurementArray.length == 0) break;
+
+                            double maxValue = measurementArray[0].getValue();
+                            for (IMeasurement measurement : measurementArray) {
+                                if (measurement.getValue() > maxValue) {
+                                    maxValue = measurement.getValue();
+                                }
+                            }
+
+                            statistics = addStatistic(statistics, new Statistic(
+                                    sensor.getId(),
+                                    station.getName(),
+                                    sensor.getParameter().getUnit().toString(),
+                                    sensor.getParameter().toString(),
+                                    maxValue));
                         }
                         case MIN -> {
-                            //TODO: Get first value min
+                            IMeasurement[] measurementArray = sensor.getMeasurements();
+                            if (measurementArray == null) break;
+
+                            measurementArray = getMeasurementsWithinDates(measurementArray, startDate, endDate);
+                            if (measurementArray.length == 0) break;
+
+                            double minValue = measurementArray[0].getValue();
+                            for (IMeasurement iMeasurement : measurementArray) {
+                                if (iMeasurement instanceof Measurement measurement) {
+                                    if (measurement.getValue() < minValue) {
+                                        minValue = measurement.getValue();
+                                    }
+                                }
+                            }
+
+                            statistics = addStatistic(statistics, new Statistic(
+                                    sensor.getId(),
+                                    station.getName(),
+                                    sensor.getParameter().getUnit().toString(),
+                                    sensor.getParameter().toString(),
+                                    minValue));
                         }
                     }
                 }
@@ -430,7 +467,8 @@ public class City implements ICity, ICityStatistics {
 
                     for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                         if (iMeasurement instanceof Measurement measurement) {
-                            if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                            if (measurement.getTime().compareTo(startDate) > 0 &&
+                                    measurement.getTime().compareTo(endDate) < 0) {
                                 valueCount++;
                             }
                         }
@@ -444,15 +482,93 @@ public class City implements ICity, ICityStatistics {
                             valueCount));
                 }
                 case MAX -> {
-                    //TODO: Get first value max
+                    IMeasurement[] measurementArray = sensor.getMeasurements();
+                    if (measurementArray == null) break;
+
+                    measurementArray = getMeasurementsWithinDates(measurementArray, startDate, endDate);
+                    if (measurementArray.length == 0) break;
+
+                    double maxValue = measurementArray[0].getValue();
+                    for (IMeasurement measurement : measurementArray) {
+                        if (measurement.getValue() > maxValue) {
+                            maxValue = measurement.getValue();
+                        }
+                    }
+
+                    statistics = addStatistic(statistics, new Statistic(
+                            sensor.getId(),
+                            station.getName(),
+                            sensor.getParameter().getUnit().toString(),
+                            sensor.getParameter().toString(),
+                            maxValue));
                 }
                 case MIN -> {
-                    //TODO: Get first value min
+                    IMeasurement[] measurementArray = sensor.getMeasurements();
+                    if (measurementArray == null) break;
+
+                    measurementArray = getMeasurementsWithinDates(measurementArray, startDate, endDate);
+                    if (measurementArray.length == 0) break;
+
+                    double minValue = measurementArray[0].getValue();
+                    for (IMeasurement iMeasurement : measurementArray) {
+                        if (iMeasurement instanceof Measurement measurement) {
+                            if (measurement.getValue() < minValue) {
+                                minValue = measurement.getValue();
+                            }
+                        }
+                    }
+
+                    statistics = addStatistic(statistics, new Statistic(
+                            sensor.getId(),
+                            station.getName(),
+                            sensor.getParameter().getUnit().toString(),
+                            sensor.getParameter().toString(),
+                            minValue));
                 }
             }
         }
 
         return statistics.clone();
+    }
+
+    //TODO: Comentar isto direito
+
+    /**
+     * Returns an array of measurements within the specified dates
+     *
+     * @param measurements ...
+     * @param startDate    ...
+     * @param endDate      ...
+     * @return ...
+     */
+    private IMeasurement[] getMeasurementsWithinDates(IMeasurement[] measurements, LocalDateTime startDate, LocalDateTime endDate) {
+        IMeasurement[] array = new IMeasurement[]{};
+
+        for (IMeasurement iMeasurement : measurements) {
+            if (iMeasurement instanceof Measurement measurement) {
+                if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
+                    array = addMeasurement(array, measurement);
+                }
+            }
+        }
+
+        return array;
+    }
+
+    /**
+     * Adds an element to an already existing array and increments the size of that array by one
+     *
+     * @param srcArray    ...
+     * @param measurement ...
+     * @return ...
+     */
+    private IMeasurement[] addMeasurement(IMeasurement[] srcArray, IMeasurement measurement) {
+        IMeasurement[] destArray = new IMeasurement[srcArray.length + 1];
+
+        System.arraycopy(srcArray, 0, destArray, 0, srcArray.length);
+        destArray[(srcArray.length == 0) ? 0 : srcArray.length - 1] = measurement;
+
+        return destArray;
     }
 
     /**
