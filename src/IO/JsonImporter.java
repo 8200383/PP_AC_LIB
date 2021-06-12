@@ -1,22 +1,18 @@
 package IO;
 
-import Quickchart.ChartType;
-import Quickchart.QuickChart;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.ICity;
-import edu.ma02.core.interfaces.IStatistics;
-import edu.ma02.io.interfaces.IExporter;
 import edu.ma02.io.interfaces.IImporter;
 import edu.ma02.io.interfaces.IOStatistics;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -48,7 +44,11 @@ public class JsonImporter implements IImporter {
 
         ImportationReport report = new ImportationReport();
 
-        JSONArray jsonArray = (JSONArray) JSONValue.parse(new FileReader(path));
+        // Windows encoding is windows-1252 and Java default encoding is not UTF-8
+        FileInputStream fileOutputStream = new FileInputStream(path);
+        InputStreamReader inputStreamReader = new InputStreamReader(fileOutputStream, StandardCharsets.UTF_8);
+
+        JSONArray jsonArray = (JSONArray) JSONValue.parse(inputStreamReader);
         for (Object o : jsonArray) {
             JSONObject jsonObject = (JSONObject) o;
 
