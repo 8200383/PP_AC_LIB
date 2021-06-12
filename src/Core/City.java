@@ -346,6 +346,29 @@ public class City implements ICity, ICityStatistics {
     @Override
     public IStatistics[] getMeasurementsByStation(AggregationOperator aggregationOperator, Parameter parameter) {
 
+        /*
+            FIXME Hugo
+            1. Ao exportar esta visualização o gráfico tera de estar orientado por estações
+               ex: a estação "estrela" tem 5 measurements
+               1.1 FIXME Neste momento ja perdestes essa noção pois tu adicionas a cada sensor que passas ao invés de
+                   de adicionares a cada estação que passas
+                   1.1.1 O getMeasurementsBySensor(), both, estão direitos pois adicionas por casa sensor que passas
+                   1.1.2 FIXME getMeasurementsByStation(), both!
+            2. Para o gráfico deveria ir para lá a seguinte informação:
+               2.1 O operador de agregação, explanation: para saber se por exemplo se trata de uma média
+               2.2 Outros detalhes inclui:
+                   2.2.1 Parameter
+                   2.2.2 O nome da estação
+                   2.2.3 O range das datas
+                   2.2.4 O id do sensor
+               2.3 Feel free para adaptar a class Statistic para satisfazer as necessidades do gráfico
+               2.4 O gráfico tanto pode ser de barras ou linhas
+                   2.4.1 O gráfico dos detalhes de importação IOStatistics poderá ser radar ou pie
+                   2.4.2 https://quickchart.io/documentation/#bar-graph
+               2.5 Existem outros detalhes do gráfico mas so depois de o ver construido é que posso dizer mais...
+            3. No City ficas com os func que tem as datas e eu fico com as outras duas.
+         */
+
         IStatistics[] statistics = new IStatistics[]{};
 
         for (IStation iStation : getStations()) {
@@ -646,8 +669,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 IMeasurement[] measurements = sensor.getMeasurements();
-
-                double minValue = measurements[0].getValue(); // TODO Posição 0 pode ser null...
+                double minValue = measurements[0].getValue();
                 for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                     if (iMeasurement instanceof Measurement measurement) {
                         if (measurement.getValue() < minValue) {
@@ -674,8 +696,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 IMeasurement[] measurements = sensor.getMeasurements();
-
-                double maxValue = measurements[0].getValue(); // TODO Posição 0 pode ser null...
+                double maxValue = measurements[0].getValue();
                 for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                     if (iMeasurement instanceof Measurement measurement) {
                         if (measurement.getValue() > maxValue) {
