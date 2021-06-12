@@ -159,6 +159,23 @@ public class Sensor implements ISensor {
     }
 
     /**
+     * Convert unicode char 'MICRO SIGN' (U+00B5) to greek approximation (U+03BC)
+     *
+     * @param unit The unit where the special character is
+     * @return The new string if there are a match, otherwise return without changes
+     */
+    private String convertMicroLatinSignToGreekIfAny(String unit) {
+        String latinMicroSign = "\u00B5";
+        String greekMicroSign = "\u03BC";
+
+        if (unit.startsWith(latinMicroSign)) {
+            return unit.replace(latinMicroSign, greekMicroSign);
+        }
+
+        return unit;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -202,11 +219,16 @@ public class Sensor implements ISensor {
      * {@inheritDoc}
      */
     @Override
-    public boolean addMeasurement(double value, LocalDateTime localDateTime, String u) throws SensorException, MeasurementException {
-        String unit = u.equals("Mbar") ? u.toLowerCase() : u;
+    public boolean addMeasurement(double value, LocalDateTime localDateTime, String unit) throws SensorException, MeasurementException {
+        unit = convertMicroLatinSignToGreekIfAny(unit);
+
+        // Accept edge case of Mbar
+        if (unit.equals("Mbar")) {
+            unit = unit.toLowerCase();
+        }
 
         if (parameter.getUnit() != Unit.getUnitFromString(unit)) {
-            throw new SensorException("Invalid Unit of measure for this sensor");
+            throw new SensorException("Invalid unit of measure for this sensor: " + sensorId);
         }
 
         return addElement(new Measurement(value, localDateTime));
@@ -250,6 +272,7 @@ public class Sensor implements ISensor {
         return "Sensor{" +
                 "type=" + sensorType +
                 ", parameter=" + parameter +
+                ", unit=" + parameter.getUnit().toString() +
                 ", sensorId='" + sensorId + '\'' +
                 ", cartesianCoordinates=" + cartesianCoordinates +
                 ", geographicCoordinates=" + geographicCoordinates +
