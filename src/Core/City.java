@@ -99,7 +99,7 @@ public class City implements ICity, ICityStatistics {
                 // Division by 0 in Java causes 'Not a Number' (NaN)
                 if (sensor.getNumMeasurements() == 0) {
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), null, null, 0));
+                            sensor.getId(), "", sensor.getParameter(), 0));
                     break;
                 }
 
@@ -111,7 +111,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null,
+                        sensor.getId(), "", sensor.getParameter(),
                         sumOfMeasurements / (double) sensor.getNumMeasurements()));
             }
         }
@@ -146,7 +146,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, minValue));
+                        sensor.getId(), "", sensor.getParameter(), minValue));
             }
         }
 
@@ -177,7 +177,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, maxValue));
+                        sensor.getId(), "", sensor.getParameter(), maxValue));
             }
         }
 
@@ -196,7 +196,7 @@ public class City implements ICity, ICityStatistics {
         for (ISensor iSensor : sensors) {
             if (iSensor instanceof Sensor sensor) {
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null,
+                        sensor.getId(), "", sensor.getParameter(),
                         sensor.getNumMeasurements()));
             }
         }
@@ -229,7 +229,7 @@ public class City implements ICity, ICityStatistics {
         IMeasurement[] destArray = new IMeasurement[srcArray.length + 1];
 
         System.arraycopy(srcArray, 0, destArray, 0, srcArray.length);
-        destArray[(srcArray.length == 0) ? 0 : srcArray.length - 1] = measurement;
+        destArray[destArray.length - 1] = measurement;
 
         return destArray;
     }
@@ -494,7 +494,7 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null,
+                            "",
                             stations[i].getName(),
                             parameter,
                             sum / (double) measurements.length
@@ -514,7 +514,7 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null, stations[i].getName(), null,
+                            "", stations[i].getName(), parameter,
                             min / measurements.length
                     ));
                 }
@@ -531,7 +531,7 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null, stations[i].getName(), null,
+                            "", stations[i].getName(), parameter,
                             max / measurements.length
                     ));
                 }
@@ -546,9 +546,9 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     addStatistic(statistics, new Statistic(
-                            null,
+                            "",
                             stations[i].getName(),
-                            null,
+                            parameter,
                             measurementsByStation
                     ));
                 }
@@ -619,9 +619,9 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null,
+                            sensor.getId(),
                             station.getName(),
-                            null,
+                            sensor.getParameter(),
                             valuesSum / (double) measurementCount
                     ));
                 }

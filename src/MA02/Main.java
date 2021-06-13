@@ -3,10 +3,12 @@ package MA02;
 import Core.*;
 import IO.JsonExporter;
 import IO.JsonImporter;
+import Quickchart.ChartType;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.interfaces.IStatistics;
+import edu.ma02.dashboards.Dashboard;
 import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class Main {
         //IStatistics[] measurementsByStation = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
         //Arrays.stream(measurementsByStation).filter(m -> m != null).forEach(m -> System.out.println(m.getDescription()));
 
-        IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
+        /*IStatistics[] measurementsBySensor = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.AVG, Parameter.LAEQ);
         System.out.println(measurementsBySensor.length);
         Arrays.stream(measurementsBySensor).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
         System.out.println("------------");
@@ -54,10 +56,16 @@ public class Main {
         System.out.println("------------");
         IStatistics[] measurementsBySensor3 = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.COUNT, Parameter.LAEQ);
         System.out.println(measurementsBySensor3.length);
-        Arrays.stream(measurementsBySensor3).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
+        Arrays.stream(measurementsBySensor3).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));*/
+
+        IStatistics[] measurementsTest = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
 
         JsonExporter exporter = new JsonExporter();
+        exporter.setStatistics(measurementsTest);
+        exporter.setOutputFileName("resources/index.json");
+        exporter.setChartType(ChartType.BAR);
+        exporter.export();
+
+        Dashboard.render(new String[]{"resources/index.json"});
     }
-
-
 }

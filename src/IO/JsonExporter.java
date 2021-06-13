@@ -5,9 +5,11 @@ import Quickchart.QuickChart;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IExporter;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -66,7 +68,12 @@ public class JsonExporter implements IExporter {
     @Override
     public String export() throws IOException {
 
-        JSONObject jsonObject = QuickChart.generateChartConfiguration(chartType, statistics);
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = QuickChart.generateChartConfiguration(chartType, statistics, false);
+        } catch (ParseException e) {
+            throw new IOException(Arrays.toString(e.getStackTrace()));
+        }
 
         try (FileWriter fos = new FileWriter(filenameOutputPath)) {
             fos.write(jsonObject.toJSONString());

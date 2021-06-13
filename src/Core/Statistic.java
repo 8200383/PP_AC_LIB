@@ -21,8 +21,8 @@ public class Statistic implements IStatistics {
     public Statistic(String sensorId, String stationName, Parameter sensorParameter, double value) {
         this.description.put("sensorId", sensorId);
         this.description.put("stationName", stationName);
-        this.description.put("sensorParameter", sensorParameter);
-        this.description.put("sensorUnit", sensorParameter.getUnit());
+        this.description.put("sensorParameter", sensorParameter.toString());
+        this.description.put("sensorUnit", sensorParameter.getUnit().toString());
 
         this.value = value;
     }
