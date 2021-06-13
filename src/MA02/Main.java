@@ -1,6 +1,7 @@
 package MA02;
 
 import Core.*;
+import IO.JsonExporter;
 import IO.JsonImporter;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
@@ -54,6 +55,8 @@ public class Main {
         IStatistics[] measurementsBySensor3 = city.getMeasurementsBySensor("Jardim da Estrela", AggregationOperator.COUNT, Parameter.LAEQ);
         System.out.println(measurementsBySensor3.length);
         Arrays.stream(measurementsBySensor3).filter(Objects::nonNull).forEach(m -> System.out.println(m.getValue() + " " + m.getDescription()));
+
+        JsonExporter exporter = new JsonExporter();
     }
 
 

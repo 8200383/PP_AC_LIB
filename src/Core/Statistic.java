@@ -1,6 +1,8 @@
 package Core;
 
+import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.interfaces.IStatistics;
+import org.json.simple.JSONObject;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -13,14 +15,14 @@ import edu.ma02.core.interfaces.IStatistics;
  */
 public class Statistic implements IStatistics {
 
-    String description;
+    JSONObject description = new JSONObject();
     double value;
 
-    public Statistic(String sensorId, String stationName, String sensorParameter, String sensorUnit, double value) {
-        this.description = "Sensor=" + sensorId +
-                ", Station=" + stationName +
-                ", Unit=" + sensorUnit +
-                ", Parameter=" + sensorParameter;
+    public Statistic(String sensorId, String stationName, Parameter sensorParameter, double value) {
+        this.description.put("sensorId", sensorId);
+        this.description.put("stationName", stationName);
+        this.description.put("sensorParameter", sensorParameter);
+        this.description.put("sensorUnit", sensorParameter.getUnit());
 
         this.value = value;
     }
@@ -30,7 +32,7 @@ public class Statistic implements IStatistics {
      */
     @Override
     public String getDescription() {
-        return description;
+        return description.toJSONString();
     }
 
     /**

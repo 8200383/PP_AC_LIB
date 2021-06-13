@@ -99,7 +99,7 @@ public class City implements ICity, ICityStatistics {
                 // Division by 0 in Java causes 'Not a Number' (NaN)
                 if (sensor.getNumMeasurements() == 0) {
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), null, null, null, 0));
+                            sensor.getId(), null, null, 0));
                     break;
                 }
 
@@ -111,7 +111,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, null,
+                        sensor.getId(), null, null,
                         sumOfMeasurements / (double) sensor.getNumMeasurements()));
             }
         }
@@ -146,7 +146,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, null, minValue));
+                        sensor.getId(), null, null, minValue));
             }
         }
 
@@ -177,7 +177,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, null, maxValue));
+                        sensor.getId(), null, null, maxValue));
             }
         }
 
@@ -196,7 +196,7 @@ public class City implements ICity, ICityStatistics {
         for (ISensor iSensor : sensors) {
             if (iSensor instanceof Sensor sensor) {
                 statistics = addStatistic(statistics, new Statistic(
-                        sensor.getId(), null, null, null,
+                        sensor.getId(), null, null,
                         sensor.getNumMeasurements()));
             }
         }
@@ -407,8 +407,7 @@ public class City implements ICity, ICityStatistics {
                             statistics = addStatistic(statistics, new Statistic(
                                     sensor.getId(),
                                     station.getName(),
-                                    sensor.getParameter().getUnit().toString(),
-                                    sensor.getParameter().toString(),
+                                    sensor.getParameter(),
                                     valuesSum / (double) valueCount));
                         }
                         case COUNT -> {
@@ -426,8 +425,7 @@ public class City implements ICity, ICityStatistics {
                             statistics = addStatistic(statistics, new Statistic(
                                     sensor.getId(),
                                     station.getName(),
-                                    sensor.getParameter().getUnit().toString(),
-                                    sensor.getParameter().toString(),
+                                    sensor.getParameter(),
                                     valueCount));
                         }
                         case MAX -> {
@@ -447,8 +445,7 @@ public class City implements ICity, ICityStatistics {
                             statistics = addStatistic(statistics, new Statistic(
                                     sensor.getId(),
                                     station.getName(),
-                                    sensor.getParameter().getUnit().toString(),
-                                    sensor.getParameter().toString(),
+                                    sensor.getParameter(),
                                     maxValue));
                         }
                         case MIN -> {
@@ -470,8 +467,7 @@ public class City implements ICity, ICityStatistics {
                             statistics = addStatistic(statistics, new Statistic(
                                     sensor.getId(),
                                     station.getName(),
-                                    sensor.getParameter().getUnit().toString(),
-                                    sensor.getParameter().toString(),
+                                    sensor.getParameter(),
                                     minValue));
                         }
                     }
@@ -500,8 +496,7 @@ public class City implements ICity, ICityStatistics {
                     statistics = addStatistic(statistics, new Statistic(
                             null,
                             stations[i].getName(),
-                            null,
-                            null,
+                            parameter,
                             sum / (double) measurements.length
                     ));
 
@@ -519,7 +514,7 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null, stations[i].getName(), null, null,
+                            null, stations[i].getName(), null,
                             min / measurements.length
                     ));
                 }
@@ -536,7 +531,7 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            null, stations[i].getName(), null, null,
+                            null, stations[i].getName(), null,
                             max / measurements.length
                     ));
                 }
@@ -553,7 +548,6 @@ public class City implements ICity, ICityStatistics {
                     addStatistic(statistics, new Statistic(
                             null,
                             stations[i].getName(),
-                            null,
                             null,
                             measurementsByStation
                     ));
@@ -612,22 +606,24 @@ public class City implements ICity, ICityStatistics {
         for (ISensor sensor : station.getSensors()) {
             switch (aggregationOperator) {
                 case AVG -> {
+                    int measurementCount = 0;
                     double valuesSum = 0;
 
                     for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                         if (iMeasurement instanceof Measurement measurement) {
                             if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
                                 valuesSum += measurement.getValue();
+                                measurementCount++;
                             }
                         }
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(),
+                            null,
                             station.getName(),
-                            sensor.getParameter().getUnit().toString(),
-                            sensor.getParameter().toString(),
-                            valuesSum / (double) sensor.getNumMeasurements()));
+                            null,
+                            valuesSum / (double) measurementCount
+                    ));
                 }
                 case COUNT -> {
                     int valueCount = 0;
@@ -644,8 +640,7 @@ public class City implements ICity, ICityStatistics {
                     statistics = addStatistic(statistics, new Statistic(
                             sensor.getId(),
                             station.getName(),
-                            sensor.getParameter().getUnit().toString(),
-                            sensor.getParameter().toString(),
+                            sensor.getParameter(),
                             valueCount));
                 }
                 case MAX -> {
@@ -665,8 +660,7 @@ public class City implements ICity, ICityStatistics {
                     statistics = addStatistic(statistics, new Statistic(
                             sensor.getId(),
                             station.getName(),
-                            sensor.getParameter().getUnit().toString(),
-                            sensor.getParameter().toString(),
+                            sensor.getParameter(),
                             maxValue));
                 }
                 case MIN -> {
@@ -688,8 +682,7 @@ public class City implements ICity, ICityStatistics {
                     statistics = addStatistic(statistics, new Statistic(
                             sensor.getId(),
                             station.getName(),
-                            sensor.getParameter().getUnit().toString(),
-                            sensor.getParameter().toString(),
+                            sensor.getParameter(),
                             minValue));
                 }
             }
@@ -703,10 +696,10 @@ public class City implements ICity, ICityStatistics {
     /**
      * Returns an array of measurements within the specified dates
      * // TODO Depois passa a função para cima, não deixes misturado com os overrides
-     * @param measurements ...
-     * @param startDate    ...
-     * @param endDate      ...
-     * @return ...
+     * @param measurements The array of {@link IMeasurement[] measurements}
+     * @param startDate    ... {@link LocalDateTime startDate}
+     * @param endDate      ... {@link LocalDateTime endDate}
+     * @return Return an array of {@link IMeasurement}
      */
     private IMeasurement[] getMeasurementsWithinDates(IMeasurement[] measurements, LocalDateTime startDate, LocalDateTime endDate) {
         IMeasurement[] array = new IMeasurement[]{};
@@ -747,20 +740,12 @@ public class City implements ICity, ICityStatistics {
             }
         }
 
-        switch (aggregationOperator) {
-            case AVG -> {
-                statistics = avgOfMeasurementsBySensor(compatibleSensors);
-            }
-            case MIN -> {
-                statistics = minOfMeasurementBySensor(compatibleSensors);
-            }
-            case MAX -> {
-                statistics = maxOfMeasurementsBySensor(compatibleSensors);
-            }
-            case COUNT -> {
-                statistics = countOfMeasurementsBySensor(compatibleSensors);
-            }
-        }
+        statistics = switch (aggregationOperator) {
+            case AVG -> avgOfMeasurementsBySensor(compatibleSensors);
+            case MIN -> minOfMeasurementBySensor(compatibleSensors);
+            case MAX -> maxOfMeasurementsBySensor(compatibleSensors);
+            case COUNT -> countOfMeasurementsBySensor(compatibleSensors);
+        };
 
         return statistics.clone();
     }
