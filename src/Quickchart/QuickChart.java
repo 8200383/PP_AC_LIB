@@ -40,19 +40,55 @@ public class QuickChart {
         dataObject.put("datasets", appendDatasetsArray("some label", statistics));
         jsonObject.put("data", dataObject);
 
-        JSONObject optionsObject = new JSONObject();
-        optionsObject.put("display", "true");
-        optionsObject.put("text", "Title");
 
-        jsonObject.put("options", optionsObject);
+        jsonObject.put("options", appendChartOptions("Try 1"));
         return jsonObject;
     }
 
-    private static String[] getSensorIds(IStatistics[] statistics){
+    private static JSONObject appendChartOptions(String title) {
+        JSONObject options = new JSONObject();
+        options.put("display", "true");
+        options.put("text", title);
+        return options;
+    }
+
+    private static JSONArray appendDatasetsArray(String label, IStatistics[] statistics) {
+        JSONArray datasetsArray = new JSONArray();
+
+        JSONObject datasetsObject = new JSONObject();
+        datasetsObject.put("label", label);
+        JSONArray dataArray = new JSONArray();
+
+        for (IStatistics s : statistics) {
+            dataArray.add(s.getValue());
+        }
+
+        datasetsObject.put("data", dataArray);
+        datasetsArray.add(datasetsObject);
+        return datasetsArray;
+    }
+
+    private static JSONArray appendLabelsArray(IStatistics[] statistics, boolean isSensorChart) {
+        JSONArray labelsArray = new JSONArray();
+
+        if (isSensorChart) {
+            for (String stationId : getSensorIds(statistics)) {
+                labelsArray.add(stationId);
+            }
+        } else {
+            for (String stationName : getStationNames(statistics)) {
+                labelsArray.add(stationName);
+            }
+        }
+
+        return labelsArray;
+    }
+
+    private static String[] getSensorIds(IStatistics[] statistics) {
         int count = 0;
         String[] sensorIds = new String[statistics.length];
 
-        for (IStatistics statistic : statistics){
+        for (IStatistics statistic : statistics) {
             JSONObject description = (JSONObject) JSONValue.parse(statistic.getDescription());
             sensorIds[count] = description.containsKey("sensorId") ? description.get("sensorId").toString() : "";
             count++;
