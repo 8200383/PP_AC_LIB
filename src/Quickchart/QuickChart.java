@@ -47,8 +47,10 @@ public class QuickChart {
 
     private static JSONObject appendChartOptions(String title) {
         JSONObject options = new JSONObject();
-        options.put("display", "true");
-        options.put("text", title);
+        JSONObject titleObject = new JSONObject();
+        titleObject.put("display", "true");
+        titleObject.put("text", title);
+        options.put("title", titleObject);
         return options;
     }
 
