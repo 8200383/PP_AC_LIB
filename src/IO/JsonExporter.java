@@ -2,6 +2,7 @@ package IO;
 
 import Quickchart.ChartType;
 import Quickchart.QuickChart;
+import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IExporter;
 import org.json.simple.JSONObject;
@@ -22,6 +23,7 @@ import java.util.Arrays;
  */
 public class JsonExporter implements IExporter {
 
+    private Parameter parameter;
     private IStatistics[] statistics;
     private String filenameOutputPath;
     private ChartType chartType;
@@ -70,7 +72,7 @@ public class JsonExporter implements IExporter {
 
         JSONObject jsonObject = null;
         try {
-            jsonObject = QuickChart.generateChartConfiguration(chartType, statistics, false);
+            jsonObject = QuickChart.generateChartConfiguration(chartType, statistics, false, parameter);
         } catch (ParseException e) {
             throw new IOException(Arrays.toString(e.getStackTrace()));
         }
@@ -80,5 +82,9 @@ public class JsonExporter implements IExporter {
         }
 
         return jsonObject.toJSONString();
+    }
+
+    public void setParameter(Parameter parameter) {
+        this.parameter = parameter;
     }
 }

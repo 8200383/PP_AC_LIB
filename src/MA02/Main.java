@@ -10,10 +10,7 @@ import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.dashboards.Dashboard;
 import edu.ma02.io.interfaces.IOStatistics;
-
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -64,8 +61,9 @@ public class Main {
         exporter.setStatistics(measurementsTest);
         exporter.setOutputFileName("resources/index.json");
         exporter.setChartType(ChartType.BAR);
-        exporter.export();
+        exporter.setParameter(Parameter.LAEQ);
+        String json = exporter.export();
 
-        Dashboard.render(new String[]{"resources/index.json"});
+        Dashboard.render(new String[]{json});
     }
 }

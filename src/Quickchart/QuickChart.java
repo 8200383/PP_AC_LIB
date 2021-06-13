@@ -1,5 +1,6 @@
 package Quickchart;
 
+import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.interfaces.IStatistics;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,7 +26,7 @@ public class QuickChart {
      * @param statistics The {@link IStatistics data} to process
      * @return Returns the configuration of the chart
      */
-    public static JSONObject generateChartConfiguration(ChartType chartType, IStatistics[] statistics, boolean isSensorChart) throws ParseException {
+    public static JSONObject generateChartConfiguration(ChartType chartType, IStatistics[] statistics, boolean isSensorChart, Parameter parameter) throws ParseException {
         if (chartType == null || statistics == null) {
             throw new IllegalArgumentException("This method doesn't support null parameters");
         }
@@ -37,11 +38,11 @@ public class QuickChart {
 
         dataObject.put("labels", appendLabelsArray(statistics, isSensorChart));
 
-        dataObject.put("datasets", appendDatasetsArray("some label", statistics));
+        dataObject.put("datasets", appendDatasetsArray(parameter.getUnit().toString(), statistics));
         jsonObject.put("data", dataObject);
 
 
-        jsonObject.put("options", appendChartOptions("Try 1"));
+        jsonObject.put("options", appendChartOptions(parameter.name()));
         return jsonObject;
     }
 
@@ -51,6 +52,19 @@ public class QuickChart {
         titleObject.put("display", "true");
         titleObject.put("text", title);
         options.put("title", titleObject);
+
+        JSONObject scale = new JSONObject();
+        JSONArray xAxes = new JSONArray();
+        JSONObject scaleLabel = new JSONObject();
+
+        scaleLabel.put("display", true);
+        scaleLabel.put("fontSize", 2);
+
+        xAxes.add(scaleLabel);
+        scale.put("xAxes", xAxes);
+
+        options.put("scales", scale);
+
         return options;
     }
 
