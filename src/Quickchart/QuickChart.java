@@ -6,10 +6,7 @@ import edu.ma02.io.interfaces.IExporter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
