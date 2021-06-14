@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PP_AC_8200383_8200590:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PP_AC_8200383_8200590_jar</output-path>
+    <root id="archive" name="PP_AC_8200383_8200590.jar">
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-simple-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/MA02_students-1.2.jar" path-in-jar="/" />
+      <element id="module-output" name="PP_AC_8200383_8200590" />
+    </root>
+  </artifact>
+</component>
