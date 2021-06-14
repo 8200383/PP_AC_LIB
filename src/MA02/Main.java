@@ -1,8 +1,8 @@
 package MA02;
 
 import Core.*;
-import IO.JsonExporter;
-import IO.JsonImporter;
+import Quickchart.QuickChart;
+import SensorDataInput.JsonImporter;
 import Quickchart.ChartType;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
@@ -10,7 +10,9 @@ import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.dashboards.Dashboard;
 import edu.ma02.io.interfaces.IOStatistics;
+
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -57,12 +59,13 @@ public class Main {
 
         IStatistics[] measurementsTest = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
 
-        JsonExporter exporter = new JsonExporter();
-        exporter.setStatistics(measurementsTest);
-        exporter.setOutputFileName("resources/index.json");
-        exporter.setChartType(ChartType.BAR);
-        exporter.setParameter(Parameter.LAEQ);
-        String json = exporter.export();
+        QuickChart qcExporter = new QuickChart();
+        qcExporter.setStatistics(measurementsTest);
+        qcExporter.setChartName("Measurements By Station");
+        qcExporter.setOutputPath("resources/");
+        qcExporter.setChartType(ChartType.BAR);
+        qcExporter.setParameter(Parameter.LAEQ);
+        String json = qcExporter.export();
 
         Dashboard.render(new String[]{json});
     }
