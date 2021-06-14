@@ -1,4 +1,4 @@
-package IO;
+package SensorDataInput;
 
 import edu.ma02.io.interfaces.IOStatistics;
 

@@ -1,4 +1,4 @@
-package IO;
+package SensorDataInput;
 
 import Core.Coordinates.CartesianCoordinates;
 import Core.Coordinates.GeographicCoordinates;
