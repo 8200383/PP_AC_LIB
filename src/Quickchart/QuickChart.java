@@ -110,21 +110,11 @@ public class QuickChart implements IExporter {
      */
     private JSONObject appendChartOptions(String title) {
         JSONObject titleObject = new JSONObject();
-        titleObject.put("display", "true");
+        titleObject.put("display", true);
         titleObject.put("text", title);
-
-        JSONObject scaleLabel = new JSONObject();
-        scaleLabel.put("display", "true");
-        scaleLabel.put("fontSize", 2);
-
-        JSONArray xAxes = new JSONArray();
-        xAxes.add(scaleLabel);
-        JSONObject scale = new JSONObject();
-        scale.put("xAxes", xAxes);
 
         JSONObject options = new JSONObject();
         options.put("title", titleObject);
-        options.put("scales", scale);
 
         return options;
     }
