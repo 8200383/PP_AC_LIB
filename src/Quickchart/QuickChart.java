@@ -41,7 +41,7 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * Set the path for exportation
+     * Set the {@link String path} for exportation
      *
      * @param path The {@link String path} of the file
      * @implNote Call this function before {@link #export()}
@@ -103,11 +103,12 @@ public class QuickChart implements IExporter {
     }
 
     // TODO: The one
+
     /**
-     * Appends an options object with a {@link String title}
+     * Appends an options object with a {@link String title}.
      *
-     * @param title The {@link String title} of the chart
-     * @return Returns a {@link JSONObject} that contains the options object
+     * @param title The {@link String title} of the chart.
+     * @return Returns a {@link JSONObject} that contains the options object.
      */
     private JSONObject appendChartOptions(String title) {
         JSONObject titleObject = new JSONObject();
@@ -121,11 +122,11 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * Creates A {@link JSONArray path} with all labels from the statistics.
+     * Creates a {@link JSONArray} with all labels from {@link IStatistics statistics}.
      *
-     * @param label The {@link String path} label of the chart.
-     * @param statistics The {@link IStatistics path} array of statistics.
-     * @return Returns a {@link JSONArray path} of all the values.
+     * @param label      The {@link String label} of the chart.
+     * @param statistics The array of {@link IStatistics statistics}.
+     * @return Returns a {@link JSONArray} of all the values.
      */
     private JSONArray appendDatasetsArray(String label, IStatistics[] statistics) {
 
@@ -145,14 +146,13 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * Creates A {@link JSONArray path} with all the values from the statistics.
+     * Creates a {@link JSONArray} with all the labels from {@link IStatistics statistics}.
      *
-     * @param statistics The {@link IStatistics path} array of statistics.
-     * @return Returns a {@link JSONArray path} of all the labels.
+     * @param statistics The array of {@link IStatistics statistics}.
+     * @return Returns a {@link JSONArray} of all the labels.
      */
     private JSONArray appendLabelsArray(IStatistics[] statistics) {
         JSONArray labelsArray = new JSONArray();
-
 
         for (IStatistics s : statistics) {
             JSONObject description = (JSONObject) JSONValue.parse(s.getDescription());
@@ -160,7 +160,7 @@ public class QuickChart implements IExporter {
             if (description.containsKey("stationName")) {
                 labelsArray.add(description.get("stationName"));
             } else if (description.containsKey("sensorId")) {
-                labelsArray.add("sensorId");
+                labelsArray.add(description.get("sensorId"));
             }
         }
 
