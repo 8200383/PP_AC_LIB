@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
  */
 
 public class City implements ICity, ICityStatistics {
+    private static Integer cityId = 0;
     private final String cityName;
     private Station[] stations;
     private int nStations = 0;
@@ -30,8 +31,8 @@ public class City implements ICity, ICityStatistics {
      *
      * @param name The name of the city
      */
-    // TODO Perguntar ao prof sobre o cityId
     public City(String name) {
+        cityId = ++cityId;
         cityName = name;
         stations = new Station[10];
     }
@@ -88,8 +89,8 @@ public class City implements ICity, ICityStatistics {
      * Creates an array of measurements within the specified dates
      *
      * @param measurements The array of {@link IMeasurement[] measurements}
-     * @param startDate The {@link LocalDateTime startDate} for the search
-     * @param endDate The {@link LocalDateTime endDate} for the search
+     * @param startDate    The {@link LocalDateTime startDate} for the search
+     * @param endDate      The {@link LocalDateTime endDate} for the search
      * @return Returns an array of {@link IMeasurement}
      */
     private IMeasurement[] getMeasurementsWithinDates(IMeasurement[] measurements, LocalDateTime startDate, LocalDateTime endDate) {
@@ -229,7 +230,7 @@ public class City implements ICity, ICityStatistics {
     /**
      * Adds an element {@link IStatistics} to an existing array and increments the size of that array by one
      *
-     * @param srcArray The {@link IStatistics srcArray} to grow
+     * @param srcArray  The {@link IStatistics srcArray} to grow
      * @param statistic The {@link IStatistics statistic} to add to the array
      * @return Returns an array of {@link IStatistics}
      */
@@ -243,7 +244,7 @@ public class City implements ICity, ICityStatistics {
     /**
      * Adds an element {@link IMeasurement} to an existing array and increments the size of that array by one
      *
-     * @param srcArray The {@link IMeasurement srcArray} to grow
+     * @param srcArray    The {@link IMeasurement srcArray} to grow
      * @param measurement The {@link IMeasurement measurement} to add to the array
      * @return Returns an array of {@link IMeasurement}
      */
@@ -257,9 +258,9 @@ public class City implements ICity, ICityStatistics {
     /**
      * Calculate the average of measurements by {@link ISensor sensor} within specified dates
      *
-     * @param sensors The array of {@link ISensor[] sensors}
+     * @param sensors   The array of {@link ISensor[] sensors}
      * @param startDate The {@link LocalDateTime startDate} to use for the search
-     * @param endDate The {@link LocalDateTime endDate} to use for the search
+     * @param endDate   The {@link LocalDateTime endDate} to use for the search
      * @return Return an array of {@link IStatistics}
      */
 
@@ -279,7 +280,7 @@ public class City implements ICity, ICityStatistics {
                 double sumOfMeasurements = 0;
                 for (IMeasurement iMeasurement : sensor.getMeasurements()) {
                     if (iMeasurement instanceof Measurement measurement) {
-                        if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0){
+                        if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
                             sumOfMeasurements += measurement.getValue();
                         }
                     }
@@ -297,9 +298,9 @@ public class City implements ICity, ICityStatistics {
     /**
      * Calculate the minimum of measurements by {@link ISensor sensor} within specified dates
      *
-     * @param sensors The array of {@link ISensor[] sensors}
+     * @param sensors   The array of {@link ISensor[] sensors}
      * @param startDate The {@link LocalDateTime startDate} to use for the search
-     * @param endDate The {@link LocalDateTime endDate} to use for the search
+     * @param endDate   The {@link LocalDateTime endDate} to use for the search
      * @return Return an array of {@link IStatistics}
      */
     private IStatistics[] minOfMeasurementBySensorDate(ISensor[] sensors, LocalDateTime startDate, LocalDateTime endDate) {
@@ -309,8 +310,8 @@ public class City implements ICity, ICityStatistics {
             if (iSensor instanceof Sensor sensor) {
 
                 IMeasurement[] measurementsWithinDates = new IMeasurement[]{};
-                for (IMeasurement measurement : sensor.getMeasurements()){
-                    if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0){
+                for (IMeasurement measurement : sensor.getMeasurements()) {
+                    if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
                         measurementsWithinDates = addMeasurement(measurementsWithinDates, measurement);
                     }
                 }
@@ -339,9 +340,9 @@ public class City implements ICity, ICityStatistics {
     /**
      * Calculate the maximum of measurements by {@link ISensor sensor} within specified dates
      *
-     * @param sensors The array of {@link ISensor[] sensors}
+     * @param sensors   The array of {@link ISensor[] sensors}
      * @param startDate The {@link LocalDateTime startDate} to use for the search
-     * @param endDate The {@link LocalDateTime endDate} to use for the search
+     * @param endDate   The {@link LocalDateTime endDate} to use for the search
      * @return Return an array of {@link IStatistics}
      */
     private IStatistics[] maxOfMeasurementsBySensorDate(ISensor[] sensors, LocalDateTime startDate, LocalDateTime endDate) {
@@ -351,8 +352,8 @@ public class City implements ICity, ICityStatistics {
             if (iSensor instanceof Sensor sensor) {
 
                 IMeasurement[] measurementsWithinDates = new IMeasurement[]{};
-                for (IMeasurement measurement : sensor.getMeasurements()){
-                    if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0){
+                for (IMeasurement measurement : sensor.getMeasurements()) {
+                    if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
                         measurementsWithinDates = addMeasurement(measurementsWithinDates, measurement);
                     }
                 }
@@ -383,7 +384,7 @@ public class City implements ICity, ICityStatistics {
      */
     @Override
     public String getId() {
-        return cityName;
+        return cityId.toString();
     }
 
     /**
@@ -517,6 +518,7 @@ public class City implements ICity, ICityStatistics {
     }
 
     // TODO: Verificar se eu entendi
+
     /**
      * {@inheritDoc}
      */
@@ -582,8 +584,8 @@ public class City implements ICity, ICityStatistics {
                     int measurementsByStation = 0;
                     for (ISensor iSensor : stations[i].getSensors()) {
                         if (iSensor instanceof Sensor sensor) {
-                            for (IMeasurement measurement : sensor.getMeasurements()){
-                                if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0){
+                            for (IMeasurement measurement : sensor.getMeasurements()) {
+                                if (measurement.getTime().compareTo(startDate) > 0 && measurement.getTime().compareTo(endDate) < 0) {
                                     measurementsByStation++;
                                 }
                             }
@@ -683,6 +685,7 @@ public class City implements ICity, ICityStatistics {
     }
 
     // TODO: Verificar???
+
     /**
      * {@inheritDoc}
      */
