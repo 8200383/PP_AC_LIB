@@ -51,7 +51,7 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * Set a {@link ChartType} for chart generation
+     * Set a {@link ChartType chartType} for chart generation
      *
      * @param chartType The {@link ChartType chartType}
      * @implNote Call this function before {@link #export()}
@@ -61,18 +61,18 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * TODO Hugo
+     * Set a {@link Parameter parameter} for chart generation
      *
-     * @param parameter
+     * @param parameter The {@link Parameter parameter} of the chart
      */
     public void setParameter(Parameter parameter) {
         this.parameter = parameter;
     }
 
     /**
-     * TODO Hugo
+     * Set a {@link String chartName} for chart generation
      *
-     * @param chartName
+     * @param chartName The {@link String chartName} of the chart
      */
     public void setChartName(String chartName) {
         this.chartName = chartName;
@@ -102,11 +102,12 @@ public class QuickChart implements IExporter {
         return jsonObject;
     }
 
+    // TODO: The one
     /**
-     * TODO Hugo
+     * Appends an options object with a {@link String title}
      *
-     * @param title
-     * @return
+     * @param title The {@link String title} of the chart
+     * @return Returns a {@link JSONObject} that contains the options object
      */
     private JSONObject appendChartOptions(String title) {
         JSONObject titleObject = new JSONObject();
@@ -120,11 +121,11 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * TODO Hugo
+     * Creates A {@link JSONArray path} with all labels from the statistics.
      *
-     * @param label
-     * @param statistics
-     * @return
+     * @param label The {@link String path} label of the chart.
+     * @param statistics The {@link IStatistics path} array of statistics.
+     * @return Returns a {@link JSONArray path} of all the values.
      */
     private JSONArray appendDatasetsArray(String label, IStatistics[] statistics) {
 
@@ -144,10 +145,10 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * TODO Hugo
+     * Creates A {@link JSONArray path} with all the values from the statistics.
      *
-     * @param statistics
-     * @return
+     * @param statistics The {@link IStatistics path} array of statistics.
+     * @return Returns a {@link JSONArray path} of all the labels.
      */
     private JSONArray appendLabelsArray(IStatistics[] statistics) {
         JSONArray labelsArray = new JSONArray();

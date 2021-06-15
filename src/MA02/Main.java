@@ -3,13 +3,11 @@ package MA02;
 import Core.City;
 import Quickchart.ChartType;
 import Quickchart.QuickChart;
-import SensorDataInput.JsonImporter;
 import edu.ma02.core.enumerations.AggregationOperator;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.exceptions.CityException;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.dashboards.Dashboard;
-import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
 
@@ -26,10 +24,9 @@ public class Main {
 
     public static void main(String[] args) throws CityException, IOException {
         City city = new City("Lisbon");
-
-        JsonImporter jsonInputOutput = new JsonImporter();
+        //JsonImporter jsonInputOutput = new JsonImporter();
         // TODO ler caminho na consola
-        IOStatistics ioStatistics = jsonInputOutput.importData(city, "resources/sensorData.json");
+        //IOStatistics ioStatistics = jsonInputOutput.importData(city, "resources/sensorData.json");
 
         IStatistics[] measurementsTest = city.getMeasurementsByStation(AggregationOperator.AVG, Parameter.LAEQ);
 
