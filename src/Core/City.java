@@ -104,7 +104,7 @@ public class City implements ICity, ICityStatistics {
                                 sensor.getId(),
                                 0
                         ));
-                        break;
+                        continue;
                     }
 
                     double sumOfMeasurements = 0;
@@ -139,7 +139,7 @@ public class City implements ICity, ICityStatistics {
                 if (sensor.getParameter().equals(parameter)) {
 
                     if (sensor.getNumMeasurements() == 0) {
-                        break;
+                        continue;
                     }
 
                     IMeasurement[] measurements = sensor.getMeasurements();
@@ -174,7 +174,7 @@ public class City implements ICity, ICityStatistics {
             if (iSensor instanceof Sensor sensor) {
                 if (sensor.getParameter().equals(parameter)) {
                     if (sensor.getNumMeasurements() == 0) {
-                        break;
+                        continue;
                     }
 
                     IMeasurement[] measurements = sensor.getMeasurements();
@@ -383,9 +383,10 @@ public class City implements ICity, ICityStatistics {
 
         for (IStation iStation : stations) {
             if (iStation instanceof Station station) {
-                double sum = 0;
-
                 IStatistics[] measurements = avgOfMeasurementsBySensor(station.getSensors(), parameter);
+                if (measurements.length == 0) continue;
+
+                double sum = 0;
                 for (IStatistics avg : measurements) {
                     sum += avg.getValue();
                 }
@@ -406,7 +407,7 @@ public class City implements ICity, ICityStatistics {
         for (IStation iStation : stations) {
             if (iStation instanceof Station station) {
                 IStatistics[] measurements = minOfMeasurementBySensor(station.getSensors(), parameter);
-                if (measurements.length == 0) break;
+                if (measurements.length == 0) continue;
                 double min = measurements[0].getValue();
 
                 for (IStatistics avg : measurements) {
@@ -431,7 +432,7 @@ public class City implements ICity, ICityStatistics {
         for (IStation iStation : stations) {
             if (iStation instanceof Station station) {
                 IStatistics[] measurements = maxOfMeasurementsBySensor(station.getSensors(), parameter);
-                if (measurements.length == 0) break;
+                if (measurements.length == 0) continue;
                 double max = measurements[0].getValue();
 
                 for (IStatistics avg : measurements) {
@@ -464,6 +465,9 @@ public class City implements ICity, ICityStatistics {
                         }
                     }
                 }
+
+                // If it's still 0 this station does not have any measurements stored
+                if (measurementsByStation == 0) continue;
 
                 statistics = addStatistic(statistics, new Statistic(
                         station.getName(),
