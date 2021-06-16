@@ -63,7 +63,7 @@ public class QuickChart implements IExporter {
      * @param chartData      The {@link IStatistics chartData}
      * @param chartType      The {@link ChartType chartType}
      */
-    private void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
+    public void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
         chartConfiguration = new ChartConfiguration(chartName, chartParameter, chartData, chartType);
     }
 
@@ -83,7 +83,7 @@ public class QuickChart implements IExporter {
      * @param config The {@link ChartConfiguration configuration} of the char
      * @return Returns the configuration of the chart
      */
-    public JSONObject generateChartConfiguration(ChartConfiguration config) {
+    private JSONObject generateChartConfiguration(ChartConfiguration config) {
         JSONObject dataObject = new JSONObject();
         dataObject.put("labels", appendLabelsArray(config.statistics));
         dataObject.put("datasets", appendDatasetsArray(
