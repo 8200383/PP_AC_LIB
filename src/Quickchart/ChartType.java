@@ -14,7 +14,7 @@ package Quickchart;
  * Enumeration for Chart Types
  */
 public enum ChartType {
-    LINE, BAR;
+    LINE, BAR, PIE;
 
     /**
      * {@inheritDoc}
@@ -27,6 +27,9 @@ public enum ChartType {
             }
             case LINE -> {
                 return "line";
+            }
+            case PIE -> {
+                return "pie";
             }
         }
 

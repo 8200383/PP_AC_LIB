@@ -21,23 +21,36 @@ import java.io.IOException;
  */
 public class QuickChart implements IExporter {
 
-    private String chartName;
-    private IStatistics[] statistics;
-    private Parameter parameter;
+    private static class ChartConfiguration {
+        private final String chartName;
+        private final IStatistics[] statistics;
+        private final Parameter parameter;
+        private final ChartType chartType;
+
+        private ChartConfiguration(String name, Parameter parameter, IStatistics[] stats, ChartType type) {
+            this.chartName = name;
+            this.parameter = parameter;
+            this.statistics = stats;
+            this.chartType = type;
+        }
+    }
+
+    private ChartConfiguration chartConfiguration;
     private String outputPath;
-    private ChartType chartType;
 
     public QuickChart() {
     }
 
     /**
-     * Set an array of {@link IStatistics}
+     *  Set a {@link ChartConfiguration}
      *
-     * @param statistics The array of {@link IStatistics}
-     * @implNote Call this function before {@link #export()}
+     * @param chartName The {@link String chartName}
+     * @param chartParameter The {@link Parameter chartParameter}
+     * @param chartData The {@link IStatistics chartData}
+     * @param chartType The {@link ChartType chartType}
      */
-    public void setStatistics(IStatistics[] statistics) {
-        this.statistics = statistics;
+    public void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
+        chartConfiguration = new ChartConfiguration(chartName, chartParameter, chartData, chartType);
     }
 
     /**
@@ -51,58 +64,26 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     * Set a {@link ChartType chartType} for chart generation
-     *
-     * @param chartType The {@link ChartType chartType}
-     * @implNote Call this function before {@link #export()}
-     */
-    public void setChartType(ChartType chartType) {
-        this.chartType = chartType;
-    }
-
-    /**
-     * Set a {@link Parameter parameter} for chart generation
-     *
-     * @param parameter The {@link Parameter parameter} of the chart
-     */
-    public void setParameter(Parameter parameter) {
-        this.parameter = parameter;
-    }
-
-    /**
-     * Set a {@link String chartName} for chart generation
-     *
-     * @param chartName The {@link String chartName} of the chart
-     */
-    public void setChartName(String chartName) {
-        this.chartName = chartName;
-    }
-
-    /**
      * Generate a chart configuration object
      *
-     * @param chartType  The {@link ChartType type} of the chart
-     * @param statistics The {@link IStatistics data} to process
+     * @param config The {@link ChartConfiguration configuration} of the char
      * @return Returns the configuration of the chart
      */
-    public JSONObject generateChartConfiguration(String title, ChartType chartType, IStatistics[] statistics, Parameter parameter) {
-        if (chartType == null || statistics == null) {
-            throw new IllegalArgumentException("This method doesn't support null parameters");
-        }
-
+    public JSONObject generateChartConfiguration(ChartConfiguration config) {
         JSONObject dataObject = new JSONObject();
-        dataObject.put("labels", appendLabelsArray(statistics));
-        dataObject.put("datasets", appendDatasetsArray(parameter.getUnit().toString(), statistics));
+        dataObject.put("labels", appendLabelsArray(config.statistics));
+        dataObject.put("datasets", appendDatasetsArray(
+                Parameter.getParameterName(config.parameter),
+                config.statistics
+        ));
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", chartType.toString());
+        jsonObject.put("type", config.chartType.toString());
         jsonObject.put("data", dataObject);
-        jsonObject.put("options", appendChartOptions(title));
+        jsonObject.put("options", appendChartOptions(config.chartName));
 
         return jsonObject;
     }
-
-    // TODO: The one
 
     /**
      * Appends an options object with a {@link String title}.
@@ -172,13 +153,14 @@ public class QuickChart implements IExporter {
      */
     @Override
     public String export() throws IOException {
-        if (chartName == null || chartType == null || statistics == null || parameter == null) {
-            throw new IOException("JsonExporter Class has not been initialize properly!");
+        if (chartConfiguration == null) {
+            return "";
         }
 
-        JSONObject jsonObject = generateChartConfiguration(chartName, chartType, statistics, parameter);
+        JSONObject jsonObject = generateChartConfiguration(chartConfiguration);
 
-        try (FileWriter fos = new FileWriter(outputPath + chartName + ".json")) {
+        String fileName = outputPath + chartConfiguration.chartName + ".json";
+        try (FileWriter fos = new FileWriter(fileName)) {
             fos.write(jsonObject.toJSONString());
         }
 
