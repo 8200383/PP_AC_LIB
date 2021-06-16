@@ -63,7 +63,7 @@ public class QuickChart implements IExporter {
      * @param chartData      The {@link IStatistics chartData}
      * @param chartType      The {@link ChartType chartType}
      */
-    public void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
+    private void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
         chartConfiguration = new ChartConfiguration(chartName, chartParameter, chartData, chartType);
     }
 
