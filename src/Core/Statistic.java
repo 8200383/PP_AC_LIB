@@ -18,9 +18,14 @@ public class Statistic implements IStatistics {
     JSONObject description = new JSONObject();
     double value;
 
+    // FIXME Add another constructor later
     public Statistic(String sensorId, String stationName, double value) {
-        this.description.put("sensorId", sensorId);
-        this.description.put("stationName", stationName);
+        if (!sensorId.isEmpty()) {
+            this.description.put("sensorId", sensorId);
+        } else if (!stationName.isEmpty()) {
+            this.description.put("stationName", stationName);
+        }
+
         this.value = value;
     }
 
