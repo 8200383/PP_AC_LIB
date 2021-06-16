@@ -29,12 +29,21 @@ public class Station implements IStation {
         sensors = new Sensor[10];
     }
 
+    /**
+     * Grow an array of {@link Sensor}
+     */
     private void grow() {
         Sensor[] copy = new Sensor[sensors.length * 2];
         System.arraycopy(sensors, 0, copy, 0, sensors.length);
         sensors = copy;
     }
 
+    /**
+     * Check if a {@link Sensor} exists
+     *
+     * @param sensor The {@link Sensor sensor} to match
+     * @return Return true if found, false otherwise
+     */
     private boolean exists(Sensor sensor) {
         if (sensor == null) return false;
 
@@ -47,6 +56,12 @@ public class Station implements IStation {
         return false;
     }
 
+    /**
+     * Find {@link ISensor} by it's {@link String sensorId}
+     *
+     * @param sensorId The {@link String sensorId} to match
+     * @return Returns an instance of {@link ISensor} if found, null otherwise
+     */
     private ISensor getSensorById(String sensorId) {
         for (int i = 0; i < elements; i++) {
             if (sensors[i].getId().equals(sensorId)) {
@@ -57,6 +72,12 @@ public class Station implements IStation {
         return null;
     }
 
+    /**
+     * Add an element of type {@link Sensor}
+     *
+     * @param sensor The {@link Sensor}
+     * @return Return true if the element is added otherwise return false
+     */
     private boolean addElement(Sensor sensor) {
         if (exists(sensor)) return false;
 

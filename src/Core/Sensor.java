@@ -104,7 +104,6 @@ public class Sensor implements ISensor {
      * @return Returns a {@link Parameter} if the parameter is successful identified or null if no parameter was found
      * @implNote Call this method after call {@link #identifySensorType(String sensorId)}
      */
-    // TODO Um Sensor pode ter mais do que um parameter
     private Parameter identifySensorParameter(SensorType sensorType, String sensorId) {
         for (Parameter param : sensorType.getParameters()) {
             if (sensorId.contains(param.toString())) return param;

@@ -12,6 +12,7 @@ import edu.ma02.dashboards.Dashboard;
 import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -106,6 +107,21 @@ public class Main {
         );
         String export6 = qcExporter.export();
 
-        Dashboard.render(new String[]{export0, export1, export2, export2_0, export3, export4, export5, export6});
+        IStatistics[] d0 = city.getMeasurementsBySensor(
+                "Calçada da Ajuda",
+                AggregationOperator.AVG,
+                Parameter.NO2,
+                LocalDateTime.of(2021, 5, 1, 0, 0, 0),
+                LocalDateTime.now()
+        );
+        qcExporter.setChartConfiguration(
+                "Calçada da Ajuda - Average of Measurements By Sensor Between Dates",
+                Parameter.NO2,
+                d0,
+                ChartType.BAR
+        );
+        String export7 = qcExporter.export();
+
+        Dashboard.render(new String[]{export0, export1, export2, export2_0, export3, export4, export5, export6, export7});
     }
 }

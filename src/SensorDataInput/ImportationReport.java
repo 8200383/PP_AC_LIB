@@ -137,7 +137,7 @@ public class ImportationReport implements IOStatistics {
      */
     @Override
     public String[] getExceptions() {
-        if (nCaughtExceptions == 0) return new String[]{};
+        if (nCaughtExceptions == 0) return new String[]{}.clone();
 
         return caughtExceptions.clone();
     }

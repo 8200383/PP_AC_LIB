@@ -16,6 +16,12 @@ public class Statistic implements IStatistics {
     private final String description;
     private final double value;
 
+    /**
+     * Constructor of {@link Statistic}
+     *
+     * @param description The {@link String description}
+     * @param value       The {@link Double value}
+     */
     public Statistic(String description, double value) {
         this.description = description;
         this.value = value;
