@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
  * Turma: LEI1T3
  */
 public class ImportationReport implements IOStatistics {
-    private int nNewMeasurementsRead;
-    private int nMeasurementsRead;
-    private int nNewStationsRead;
-    private int nStationsRead;
-    private int nNewSensorsRead;
-    private int nSensorsRead;
+    private int nNewMeasurementsRead = 0;
+    private int nMeasurementsRead = 0;
+    private int nNewStationsRead = 0;
+    private int nStationsRead = 0;
+    private int nNewSensorsRead = 0;
+    private int nSensorsRead = 0;
     private String[] caughtExceptions;
     private int nCaughtExceptions = 0;
 

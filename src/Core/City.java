@@ -7,6 +7,7 @@ import edu.ma02.core.exceptions.MeasurementException;
 import edu.ma02.core.exceptions.SensorException;
 import edu.ma02.core.exceptions.StationException;
 import edu.ma02.core.interfaces.*;
+
 import java.time.LocalDateTime;
 
 /*
@@ -224,8 +225,8 @@ public class City implements ICity, ICityStatistics {
     }
 
     private ISensor[] addSensor(ISensor[] srcArray, int sensorCount, ISensor sensor) {
-        if (srcArray.length == sensorCount){
-            ISensor[] destArray = new ISensor[srcArray.length*2];
+        if (srcArray.length == sensorCount) {
+            ISensor[] destArray = new ISensor[srcArray.length * 2];
             System.arraycopy(srcArray, 0, destArray, 0, sensorCount);
             destArray[sensorCount] = sensor;
             return destArray;
@@ -243,8 +244,8 @@ public class City implements ICity, ICityStatistics {
      * @return Returns an array of {@link IStatistics}
      */
     private IStatistics[] addStatistic(IStatistics[] srcArray, int statisticsCount, IStatistics statistic) {
-        if (srcArray.length == statisticsCount){
-            IStatistics[] destArray = new IStatistics[srcArray.length*2];
+        if (srcArray.length == statisticsCount) {
+            IStatistics[] destArray = new IStatistics[srcArray.length * 2];
             System.arraycopy(srcArray, 0, destArray, 0, statisticsCount);
             destArray[statisticsCount] = statistic;
             return destArray;
@@ -365,9 +366,10 @@ public class City implements ICity, ICityStatistics {
      * {@inheritDoc}
      */
     @Override
+    // TODO adicionar ao Menu
     public ISensor[] getSensorsByStation(String stationName) {
         IStation station = getStationByName(stationName);
-        return (station != null) ? station.getSensors() : null;
+        return (station != null) ? station.getSensors().clone() : new ISensor[]{}.clone();
     }
 
     /**
@@ -400,10 +402,9 @@ public class City implements ICity, ICityStatistics {
             if (iStation instanceof Station station) {
 
                 IStatistics[] measurements;
-                if(startDate == null && endDate == null){
+                if (startDate == null && endDate == null) {
                     measurements = avgOfMeasurementsBySensor(station.getSensors(), parameter);
-                }
-                else {
+                } else {
                     ISensor[] sensorsBetweenDates = getSensorsBetweenDates(station.getSensors(), startDate, endDate);
                     measurements = avgOfMeasurementsBySensor(sensorsBetweenDates, parameter);
                 }
@@ -412,7 +413,7 @@ public class City implements ICity, ICityStatistics {
                 double sum = 0;
 
                 for (IStatistics iStatistics : measurements) {
-                    if (iStatistics instanceof Statistic avg){
+                    if (iStatistics instanceof Statistic avg) {
                         sum += avg.getValue();
                     }
                 }
@@ -436,10 +437,9 @@ public class City implements ICity, ICityStatistics {
             if (iStation instanceof Station station) {
 
                 IStatistics[] measurements;
-                if(startDate == null && endDate == null){
+                if (startDate == null && endDate == null) {
                     measurements = avgOfMeasurementsBySensor(station.getSensors(), parameter);
-                }
-                else {
+                } else {
                     ISensor[] sensorsBetweenDates = getSensorsBetweenDates(station.getSensors(), startDate, endDate);
                     measurements = avgOfMeasurementsBySensor(sensorsBetweenDates, parameter);
                 }
@@ -448,7 +448,7 @@ public class City implements ICity, ICityStatistics {
                 double min = measurements[0].getValue();
 
                 for (IStatistics iStatistics : measurements) {
-                    if (iStatistics instanceof Statistic avg){
+                    if (iStatistics instanceof Statistic avg) {
                         if (avg.getValue() < min) {
                             min = avg.getValue();
                         }
@@ -474,10 +474,9 @@ public class City implements ICity, ICityStatistics {
             if (iStation instanceof Station station) {
 
                 IStatistics[] measurements;
-                if(startDate == null && endDate == null){
+                if (startDate == null && endDate == null) {
                     measurements = avgOfMeasurementsBySensor(station.getSensors(), parameter);
-                }
-                else {
+                } else {
                     ISensor[] sensorsBetweenDates = getSensorsBetweenDates(station.getSensors(), startDate, endDate);
                     measurements = avgOfMeasurementsBySensor(sensorsBetweenDates, parameter);
                 }
@@ -486,7 +485,7 @@ public class City implements ICity, ICityStatistics {
                 double max = measurements[0].getValue();
 
                 for (IStatistics iStatistics : measurements) {
-                    if (iStatistics instanceof Statistic avg){
+                    if (iStatistics instanceof Statistic avg) {
                         if (avg.getValue() > max) {
                             max = avg.getValue();
                         }
@@ -515,14 +514,13 @@ public class City implements ICity, ICityStatistics {
                 for (ISensor iSensor : station.getSensors()) {
                     if (iSensor instanceof Sensor sensor) {
                         if (sensor.getParameter().equals(parameter)) {
-                            if (startDate == null && endDate == null){
+                            if (startDate == null && endDate == null) {
                                 measurementsByStation += sensor.getNumMeasurements();
-                            }
-                            else{
+                            } else {
                                 IMeasurement[] measurements = sensor.getMeasurements();
-                                for (IMeasurement iMeasurement : measurements){
-                                    if (iMeasurement instanceof Measurement measurement){
-                                        if (isMeasurementBetweenDates(measurement, startDate, endDate)){
+                                for (IMeasurement iMeasurement : measurements) {
+                                    if (iMeasurement instanceof Measurement measurement) {
+                                        if (isMeasurementBetweenDates(measurement, startDate, endDate)) {
                                             measurementsByStation++;
                                         }
                                     }
