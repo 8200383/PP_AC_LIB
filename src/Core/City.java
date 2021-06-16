@@ -101,7 +101,9 @@ public class City implements ICity, ICityStatistics {
                     // Division by 0 in Java causes 'Not a Number' (NaN)
                     if (sensor.getNumMeasurements() == 0) {
                         statistics = addStatistic(statistics, new Statistic(
-                                sensor.getId(), "", 0));
+                                sensor.getId(),
+                                0
+                        ));
                         break;
                     }
 
@@ -113,8 +115,9 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), "",
-                            sumOfMeasurements / (double) sensor.getNumMeasurements()));
+                            sensor.getId(),
+                            sumOfMeasurements / (double) sensor.getNumMeasurements()
+                    ));
                 }
             }
         }
@@ -150,7 +153,9 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), "", minValue));
+                            sensor.getId(),
+                            minValue
+                    ));
                 }
             }
         }
@@ -183,7 +188,9 @@ public class City implements ICity, ICityStatistics {
                     }
 
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), "", maxValue));
+                            sensor.getId(),
+                            maxValue
+                    ));
                 }
             }
         }
@@ -204,8 +211,9 @@ public class City implements ICity, ICityStatistics {
             if (iSensor instanceof Sensor sensor) {
                 if (sensor.getParameter().equals(parameter)) {
                     statistics = addStatistic(statistics, new Statistic(
-                            sensor.getId(), "",
-                            sensor.getNumMeasurements()));
+                            sensor.getId(),
+                            sensor.getNumMeasurements()
+                    ));
                 }
             }
         }
@@ -383,7 +391,6 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        "",
                         station.getName(),
                         sum / (double) measurements.length
                 ));
@@ -409,7 +416,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        "", station.getName(),
+                        station.getName(),
                         min / measurements.length
                 ));
             }
@@ -434,7 +441,7 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        "", station.getName(),
+                        station.getName(),
                         max / measurements.length
                 ));
             }
@@ -459,7 +466,6 @@ public class City implements ICity, ICityStatistics {
                 }
 
                 statistics = addStatistic(statistics, new Statistic(
-                        "",
                         station.getName(),
                         measurementsByStation
                 ));

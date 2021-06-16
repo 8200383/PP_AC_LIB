@@ -9,6 +9,7 @@ import org.json.simple.JSONValue;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -42,12 +43,12 @@ public class QuickChart implements IExporter {
     }
 
     /**
-     *  Set a {@link ChartConfiguration}
+     * Set a {@link ChartConfiguration}
      *
-     * @param chartName The {@link String chartName}
+     * @param chartName      The {@link String chartName}
      * @param chartParameter The {@link Parameter chartParameter}
-     * @param chartData The {@link IStatistics chartData}
-     * @param chartType The {@link ChartType chartType}
+     * @param chartData      The {@link IStatistics chartData}
+     * @param chartType      The {@link ChartType chartType}
      */
     public void setChartConfiguration(String chartName, Parameter chartParameter, IStatistics[] chartData, ChartType chartType) {
         chartConfiguration = new ChartConfiguration(chartName, chartParameter, chartData, chartType);
@@ -136,13 +137,7 @@ public class QuickChart implements IExporter {
         JSONArray labelsArray = new JSONArray();
 
         for (IStatistics s : statistics) {
-            JSONObject description = (JSONObject) JSONValue.parse(s.getDescription());
-
-            if (description.containsKey("stationName")) {
-                labelsArray.add(description.get("stationName"));
-            } else if (description.containsKey("sensorId")) {
-                labelsArray.add(description.get("sensorId"));
-            }
+            labelsArray.add(s.getDescription());
         }
 
         return labelsArray;
