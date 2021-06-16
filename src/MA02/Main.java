@@ -13,6 +13,7 @@ import edu.ma02.io.interfaces.IOStatistics;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -110,13 +111,13 @@ public class Main {
         IStatistics[] d0 = city.getMeasurementsBySensor(
                 "Calçada da Ajuda",
                 AggregationOperator.AVG,
-                Parameter.NO2,
+                Parameter.TEMP,
                 LocalDateTime.of(2021, 5, 1, 0, 0, 0),
                 LocalDateTime.now()
         );
         qcExporter.setChartConfiguration(
                 "Calçada da Ajuda - Average of Measurements By Sensor Between Dates",
-                Parameter.NO2,
+                Parameter.TEMP,
                 d0,
                 ChartType.BAR
         );

@@ -1,5 +1,6 @@
 package Quickchart;
 
+import Core.Statistic;
 import edu.ma02.core.enumerations.Parameter;
 import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IExporter;
@@ -125,8 +126,10 @@ public class QuickChart implements IExporter {
     private JSONArray appendDatasetsArray(String label, IStatistics[] statistics) {
 
         JSONArray dataArray = new JSONArray();
-        for (IStatistics s : statistics) {
-            dataArray.add(s.getValue());
+        for (IStatistics iStatistics : statistics) {
+            if (iStatistics instanceof Statistic s){
+                dataArray.add(s.getValue());
+            }
         }
 
         JSONObject datasetsObject = new JSONObject();
@@ -148,8 +151,10 @@ public class QuickChart implements IExporter {
     private JSONArray appendLabelsArray(IStatistics[] statistics) {
         JSONArray labelsArray = new JSONArray();
 
-        for (IStatistics s : statistics) {
-            labelsArray.add(s.getDescription());
+        for (IStatistics iStatistics : statistics) {
+            if (iStatistics instanceof Statistic s){
+                labelsArray.add(s.getDescription());
+            }
         }
 
         return labelsArray;
