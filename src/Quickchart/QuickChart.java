@@ -5,11 +5,9 @@ import edu.ma02.core.interfaces.IStatistics;
 import edu.ma02.io.interfaces.IExporter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -22,24 +20,38 @@ import java.util.Arrays;
  */
 public class QuickChart implements IExporter {
 
+    /**
+     * Empty constructor for {@link QuickChart}
+     */
+    public QuickChart() {
+    }
+
+    private ChartConfiguration chartConfiguration;
+    private String outputPath;
+
+    /**
+     * Specification of a chart configuration
+     */
     private static class ChartConfiguration {
         private final String chartName;
         private final IStatistics[] statistics;
         private final Parameter parameter;
         private final ChartType chartType;
 
+        /**
+         * Default constructor for {@link ChartConfiguration}
+         *
+         * @param name      The {@link String name} of the chart
+         * @param parameter The {@link Parameter parameter} of the chart
+         * @param stats     The {@link IStatistics stats} of the chart
+         * @param type      The {@link ChartType type} of the char
+         */
         private ChartConfiguration(String name, Parameter parameter, IStatistics[] stats, ChartType type) {
             this.chartName = name;
             this.parameter = parameter;
             this.statistics = stats;
             this.chartType = type;
         }
-    }
-
-    private ChartConfiguration chartConfiguration;
-    private String outputPath;
-
-    public QuickChart() {
     }
 
     /**
