@@ -15,6 +15,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /*
  * Nome: Micael André Cunha Dias
@@ -79,7 +80,13 @@ public class JsonImporter implements IImporter {
                 }
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-                LocalDateTime dateTime = LocalDateTime.parse(jsonObject.get("date").toString(), formatter);
+
+                LocalDateTime dateTime;
+                try {
+                     dateTime = LocalDateTime.parse(jsonObject.get("date").toString(), formatter);
+                } catch (DateTimeParseException e) {
+                    throw new IOException("Invalid Date Format");
+                }
 
                 if (city.addMeasurement(
                         jsonObject.get("address").toString(),
